@@ -19,6 +19,9 @@
   '^ punctuation.definition.comment.asp
   '^^^^^^^^^^^^^^^^^^ comment.line.apostrophe.asp
     
+    Option Explicit
+   '^^^^^^^^^^^^^^^ keyword
+    
     Class TestClass
    '^^^^^^^^^^^^^^^ meta.class.source.asp meta.class.identifier.source.asp
    '^^^^^ storage.type.asp

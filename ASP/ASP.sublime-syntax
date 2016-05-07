@@ -30,6 +30,8 @@ contexts:
   main:
     - match: '\b(?i:End){{whitespace_or_end_of_statement}}'
       scope: invalid.illegal.unexpected-token.asp
+    - match: '(?i:Option\s+Explicit)'
+      scope: keyword.asp
     - include: definitions
     - include: statements
 
