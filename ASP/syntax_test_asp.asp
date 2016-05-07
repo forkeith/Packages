@@ -150,7 +150,14 @@
    '^^^^^^^^^ meta.class.body.source.asp
    '         ^ - storage.type.class.end.asp - meta.class.body.source.asp
     
-    Dim [], [ažė+ (]
+    Dim [], [ažė+, (], [dim]
+    '   ^^ meta.variable-definition.asp
+    '     ^ punctuation.separator.variable-declaration.asp - meta.variable-definition.asp
+    '       ^^^^^^^^^ meta.variable-definition.asp - keyword.operator.asp - punctuation.separator.variable-declaration.asp
+    '                  ^^^^^ meta.variable-definition.asp
+    [dim] = 5 ^ 2
+   '^^^^^ meta.variable-reference.asp
+    '         ^ keyword.operator.asp
     
     Const blah = _
     

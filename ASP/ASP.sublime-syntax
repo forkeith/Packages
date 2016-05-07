@@ -410,6 +410,8 @@ contexts:
       scope: support.function.event.asp
     - match: '{{asp_builtin_collections}}'
       scope: support.class.collection.asp
+    - match: '{{identifier}}'
+      scope: meta.variable-reference.asp
     - match: \(
       push: inside_parens
     - include: allow_line_continuation
