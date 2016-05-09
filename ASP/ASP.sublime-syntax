@@ -16,14 +16,7 @@ variables:
   constants: '\b(?i:vbTrue|vbFalse|vbCr|vbCrLf|vbFormFeed|vbLf|vbNewLine|vbNullChar|vbNullString|vbTab|vbVerticalTab|vbBinaryCompare|vbTextCompare|vbSunday|vbMonday|vbTuesday|vbWednesday|vbThursday|vbFriday|vbSaturday|vbUseSystemDayOfWeek|vbFirstJan1|vbFirstFourDays|vbFirstFullWeek|vbGeneralDate|vbLongDate|vbShortDate|vbLongTime|vbShortTime|vbObjectError|vbEmpty|vbNull|vbInteger|vbLong|vbSingle|vbDouble|vbCurrency|vbDate|vbString|vbObject|vbError|vbBoolean|vbVariant|vbDataObject|vbDecimal|vbByte|vbArray|vbOkCancel|vbOkOnly|vbYesNo|vbYesNoCancel|vbAbortRetryIgnore|vbRetryCancel|vbYes|vbNo|vbAbort|vbCancel|vbIgnore|vbRetry|vbCritical|vbExclamation|vbInformation|vbQuestion|vbDefaultButton[123]|Randomize)\b'
   functions: '\b(?i:Array|Add|Asc|Atn|CBool|CByte|CCur|CDate|CDbl|Chr|CInt|CLng|Conversions|Cos|CreateObject|CSng|CStr|Date|DateAdd|DateDiff|DatePart|DateSerial|DateValue|Day|Derived|Math|Escape|Eval|Exists|Exp|Filter|FormatCurrency|FormatDateTime|FormatNumber|FormatPercent|GetLocale|GetObject|GetRef|Hex|Hour|InputBox|InStr|InStrRev|Int|Fix|IsArray|IsDate|IsEmpty|IsNull|IsNumeric|IsObject|Item|Items|Join|Keys|LBound|LCase|Left|Len|LoadPicture|Log|LTrim|RTrim|Trim|Maths|Mid|Minute|Month|MonthName|MsgBox|Now|Oct|Remove|RemoveAll|Replace|RGB|Right|Rnd|Round|ScriptEngine|ScriptEngineBuildVersion|ScriptEngineMajorVersion|ScriptEngineMinorVersion|Second|SetLocale|Sgn|Sin|Space|Split|Sqr|StrComp|String|StrReverse|Tan|Time|Timer|TimeSerial|TimeValue|TypeName|UBound|UCase|Unescape|VarType|Weekday|WeekdayName|Year)\b'
   asp_builtin_classes: '\b(?i:Application|ObjectContext|Request|Response|Server|Session)\b'
-  #asp_builtin_funcs: '\b(?i:Lock|Unlock|SetAbort|SetComplete|BinaryRead|AddHeader|AppendToLog|BinaryWrite|Clear|Flush|Redirect|Write|HTMLEncode|MapPath|URLEncode|Abandon)\b'
   asp_builtin_events: '\b(?i:Application_OnEnd|Application_OnStart|OnTransactionAbort|OnTransactionCommit|Session_OnEnd|Session_OnStart|Class_Initialize|Class_Terminate)\b'
-  #asp_builtin_consts: '\b(?i:TotalBytes|Buffer|CacheControl|Charset|ContentType|Expires|ExpiresAbsolute|IsClientConnected|PICS|Status|ScriptTimeout|CodePage|LCID|SessionID|Timeout)\b'
-  asp_builtin_collections: '\b(?i:Contents|StaticObjects|ClientCertificate|Cookies|Form|QueryString|ServerVariables)\b'
-  
-  # Session       : https://msdn.microsoft.com/en-us/library/ms524319%28v=vs.90%29.aspx
-  # ObjectContext : https://msdn.microsoft.com/en-us/library/ms525667%28v=vs.90%29.aspx
-  # Application   : https://msdn.microsoft.com/en-us/library/ms525360%28v=vs.90%29.aspx
 
 contexts:
   main:
@@ -409,14 +402,26 @@ contexts:
         2: keyword.object-access.asp
         3: support.function.asp
         4: support.property.asp
-    #- match: '{{asp_builtin_classes}}'
-    #  scope: support.class.asp
-    #- match: '{{asp_builtin_funcs}}'
-    #  scope: support.function.asp
+    - match: '\b((?i:Server))\b(?:(?i:(\.)(Abandon)|(CodePage|LCID|SessionID|Timeout)|(Contents|StaticObjects))\b)?'
+      captures: # https://msdn.microsoft.com/en-us/library/ms524319%28v=vs.90%29.aspx
+        1: support.class.asp
+        2: keyword.object-access.asp
+        3: support.function.asp
+        4: support.property.asp
+        5: support.class.collection.asp
+    - match: '\b((?i:ObjectContext))\b(?:(?i:(\.)(SetAbort|SetComplete))\b)?'
+      captures: # https://msdn.microsoft.com/en-us/library/ms525667%28v=vs.90%29.aspx
+        1: support.class.asp
+        2: keyword.object-access.asp
+        3: support.function.asp
+    - match: '\b((?i:Application))\b(?:(?i:(\.)(Lock|Unlock)|(Contents|StaticObjects))\b)?'
+      captures: # https://msdn.microsoft.com/en-us/library/ms524319%28v=vs.90%29.aspx
+        1: support.class.asp
+        2: keyword.object-access.asp
+        3: support.function.asp
+        4: support.class.collection.asp
     - match: '{{asp_builtin_events}}'
       scope: support.function.event.asp
-    - match: '{{asp_builtin_collections}}'
-      scope: support.class.collection.asp
     - match: '{{identifier}}'
       scope: meta.variable-reference.asp
     - match: \(
