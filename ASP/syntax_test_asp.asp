@@ -216,7 +216,7 @@
        '^^^ storage.type.asp
        '       ^ keyword.operator.asp
        '         ^^^^^^ support.class.asp
-       '                ^^^^^^^^^^^^ support.function.vb.asp
+       '                ^^^^^^^^^^^^ support.function
        '                             ^ punctuation.definition.string.begin.asp
        '                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.asp
        '                                                        ^ punctuation.definition.string.end.asp

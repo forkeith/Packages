@@ -22,7 +22,6 @@ variables:
   asp_builtin_collections: '\b(?i:Contents|StaticObjects|ClientCertificate|Cookies|Form|QueryString|ServerVariables)\b'
   
   # Session       : https://msdn.microsoft.com/en-us/library/ms524319%28v=vs.90%29.aspx
-  # Server        : https://msdn.microsoft.com/en-us/library/ms525541%28v=vs.90%29.aspx
   # ObjectContext : https://msdn.microsoft.com/en-us/library/ms525667%28v=vs.90%29.aspx
   # Application   : https://msdn.microsoft.com/en-us/library/ms525360%28v=vs.90%29.aspx
 
@@ -134,7 +133,7 @@ contexts:
     - match: '\b(?i:Exit\s+(?:Sub|Function|Property|For|Do)){{whitespace_or_end_of_statement}}'
       scope: keyword.control.flow.asp
     - include: control_flow
-    - include: literals
+    - include: expression
 
   definitions:
     - include: class_definitions
@@ -252,7 +251,7 @@ contexts:
             - match: \)
               scope: punctuation.definition.array.end.asp
               pop: true
-            - include: literals
+            - include: expression
             - match: ','
               scope: punctuation.definition.array.separator.asp
         - match: '\s*(,)\s*'
@@ -343,10 +342,10 @@ contexts:
       push: then_could_be_block_or_single_line
     - match: '\b(?i:With){{whitespace_or_end_of_statement}}'
       scope: keyword.control.flow.asp
-      push: [inside_control_flow_with, expect_not_end_of_statement]
+      push: [inside_control_flow_with, expression_until_end_of_statement, expect_not_end_of_statement]
     - match: '\b(?i:Select Case){{whitespace_or_end_of_statement}}'
       scope: keyword.control.flow.asp
-      push: [inside_control_flow_select, literals_until_end_of_statement, expect_not_end_of_statement]
+      push: [inside_control_flow_select, expression_until_end_of_statement, expect_not_end_of_statement]
 
   then_could_be_block_or_single_line:
     - meta_content_scope: meta.between-if-and-then.asp
@@ -360,17 +359,17 @@ contexts:
         - match: '' # if the above didn't match, then it is a single line if block
           set: inside_control_flow_if_single_line
     - include: not_end_of_statement
-    - include: literals
+    - include: expression
 
   elseif_then_block:
     - meta_content_scope: meta.between-if-and-then.asp
     - match: '\b(?i:Then){{whitespace_or_end_of_statement}}'
       scope: keyword.control.flow.asp
       set: inside_control_flow_if_block
-    - include: literals
+    - include: expression
     - include: not_end_of_statement
 
-  literals:
+  expression:
     - match: \)
       scope: invalid.illegal.stray-close-bracket.asp
     - match: '{{literal_number}}'
@@ -404,6 +403,12 @@ contexts:
         3: support.function.asp
         4: support.property.asp
         5: support.class.collection.asp
+    - match: '\b((?i:Server))\b(?:(?i:(\.)(CreateObject|Execute|GetLastError|HTMLEncode|MapPath|Transfer|URLEncode)|(ScriptTimeout))\b)?'
+      captures: # https://msdn.microsoft.com/en-us/library/ms525541%28v=vs.90%29.aspx
+        1: support.class.asp
+        2: keyword.object-access.asp
+        3: support.function.asp
+        4: support.property.asp
     #- match: '{{asp_builtin_classes}}'
     #  scope: support.class.asp
     #- match: '{{asp_builtin_funcs}}'
@@ -424,7 +429,7 @@ contexts:
     - match: \n
       scope: invalid.illegal.missing-close-bracket.asp
       pop: true
-    - include: literals
+    - include: expression
 
   operators:
     - match: '(?i:Is\s+Not\b)'
@@ -494,11 +499,11 @@ contexts:
       scope: keyword.control.flow.asp
     - match: '\b(?i:Case){{whitespace_or_end_of_statement}}'
       scope: keyword.control.flow.asp
-      push: [literals_until_end_of_statement, expect_not_end_of_statement]
+      push: [expression_until_end_of_statement, expect_not_end_of_statement]
     - include: statements
 
-  literals_until_end_of_statement:
+  expression_until_end_of_statement:
     - include: allow_statement_separator
     - match: $
       pop: true
-    - include: literals
+    - include: expression
