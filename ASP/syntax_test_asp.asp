@@ -195,7 +195,7 @@
     a.Name = blah
     
     New 
-   '    ^ invalid.illegal.unexpected-end-of-statement.asp
+   '    ^ invalid.illegal.missing-token.asp
    +
    '^ invalid.illegal.unexpected-end-of-statement.asp
     
@@ -318,7 +318,7 @@
     End If
     
     If a Then Call
-    '             ^ invalid.illegal.unexpected-end-of-statement.asp
+    '             ^ invalid.illegal.missing-token.asp
     
     Dim str1_ REM example
    '^^^ storage.modifier.source.asp
@@ -451,15 +451,19 @@
        '                          ^ punctuation.definition.array.end.asp
         For x = LBound(a) to UBound(a) Step 2
        '^^^ keyword.control.flow.asp
+       '    ^ meta.variable-reference.asp
        '      ^ keyword.operator.asp
        '        ^^^^^^ support.function.vb.asp
        '                  ^^ keyword.control.flow.asp
        '                     ^^^^^^ support.function.vb.asp
        '                               ^^^^ keyword.control.flow.asp
+       '                                    ^ constant.numeric.asp
+       '                                     ^ meta.for.block.asp
             a(x) = x * 10
             '        ^ keyword.operator.asp
         Next
        '^^^^ keyword.control.flow.asp
+       '    ^ - meta.for.block.asp
     End Sub
     
     Sub NoParens fg
@@ -515,30 +519,59 @@
    '  ^ meta.between-if-and-then.asp
    '   ^ invalid.illegal.unexpected-end-of-statement.asp
     
-    For Each x In y
-        Exit For
+    For Each cookie In Request.Cookies
+   '^^^^^^^^ keyword.control.flow.asp
+   '                ^^ keyword.control.flow.asp
+   '         ^^^^^^ meta.variable-reference.asp
+   '                                  ^ meta.for.block.asp
+        Response.Write(vbCrLf & cookie)
+       '^^^^^^^^ support.class.asp
+       '        ^ keyword.object-access.asp
+       '               ^^^^^^ support.type.vb.asp
+       '                      ^ keyword.operator.asp
+       '                        ^^^^^^ meta.variable-reference.asp
+        If x = y Then Exit For
+       '^^ keyword.control.flow.asp
+       '         ^^^^ keyword.control.flow.asp
+       '              ^^^^^^^^ keyword.control.flow.asp
+        Response.Write("----" & vbCrLf)
+       '^^^^^^^^ support.class.asp
     Next
+   '^^^^ keyword.control.flow.asp
+   '    ^ - meta.for.block.asp
     
     Do
+   '^^ meta.do.block.asp keyword.control.flow.asp
         Exit Do
+       '^^^^^^^ meta.do.block.asp keyword.control.flow.asp
     Loop
+   '^^^^ keyword.control.flow.asp
+   '    ^ - meta.do.block.asp
     
     Do
         Exit Do
     Loop Until x = y
+   '^^^^^^^^^^ keyword.control.flow.asp
+   '                ^ - meta.do.block.asp
     
     Do
         Exit Do
     Loop While x <> y
+   '^^^^^^^^^^ keyword.control.flow.asp
+   '                 ^ - meta.do.block.asp - meta.while.block.asp
     
     While True
-        
+   '^^^^^ meta.while.block.asp keyword.control.flow.asp
+        ' ^^^^ storage.type.asp
     Wend
+   '^^^^ keyword.control.flow.asp
+   '    ^ - meta.while.block.asp
     
     Sub Another_Test()rem
     '                 ^^^^ comment.line.rem.asp - meta.method.identifier.source.asp
+        Something
            End _
-      Sub '^^^ storage.type.function.end.asp
+      Sub
     ' ^^^ storage.type.function.end.asp - meta.method.identifier.source.asp
     %>
    '^^ source.asp.embedded.html punctuation.section.embedded.end.asp

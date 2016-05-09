@@ -77,6 +77,12 @@ contexts:
     - match: '\s*(?=\S)'
       pop: true
 
+  expect_identifier_reference:
+    - match: '{{identifier}}'
+      scope: meta.variable-reference.asp
+      pop: true
+    - include: unexpected_token
+
   inside_string:
     - meta_scope: string.quoted.double.asp
     - match: \n
@@ -122,7 +128,7 @@ contexts:
         - include: unexpected_token
     - match: '\b(?i:Call|Set){{whitespace_or_end_of_statement}}'
       scope: storage.type.asp # maybe this should be a keyword instead?
-      push: expect_not_end_of_statement
+      push: expect_identifier_reference
     - match: '\b(?i:Exit\s+(?:Sub|Function|Property|For|Do)){{whitespace_or_end_of_statement}}'
       scope: keyword.control.flow.asp
     - include: control_flow
@@ -339,6 +345,18 @@ contexts:
     - match: '\b(?i:Select Case){{whitespace_or_end_of_statement}}'
       scope: keyword.control.flow.asp
       push: [inside_control_flow_select, expression_until_end_of_statement, expect_not_end_of_statement]
+    - match: '\b(?i:Do){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      push: [inside_control_flow_do]
+    - match: '\b(?i:While){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      push: [inside_control_flow_while, expression_until_end_of_statement, expect_not_end_of_statement]
+    - match: '\b(?i:For\s+Each){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      push: [control_flow_foreach_in, expect_identifier_reference]
+    - match: '\b(?i:For){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      push: [control_flow_forto, expect_identifier_reference]
 
   then_could_be_block_or_single_line:
     - meta_content_scope: meta.between-if-and-then.asp
@@ -376,33 +394,33 @@ contexts:
     - include: operators
     - match: '\b(?i:New){{whitespace_or_end_of_statement}}'
       scope: keyword.asp
-      push: expect_not_end_of_statement
+      push: expect_identifier_reference
     - match: '{{reserved_words}}'
       scope: invalid.illegal.unexpected-token.literal.asp
     - match: '"'
       scope: punctuation.definition.string.begin.asp
       push: inside_string
-    - match: '\b((?i:Request))\b(?:(?i:(\.)(BinaryRead)|(ClientCertificate|Cookies|Form|QueryString|ServerVariables)|(TotalBytes))\b)?'
+    - match: '\b((?i:Request))\b(?:(?i:(\.)(?:(BinaryRead)|(ClientCertificate|Cookies|Form|QueryString|ServerVariables)|(TotalBytes)))\b)?'
       captures: # https://msdn.microsoft.com/en-us/library/ms524948%28v=vs.90%29.aspx
         1: support.class.asp
         2: keyword.object-access.asp
         3: support.function.asp
         4: support.class.collection.asp
         5: support.property.asp
-    - match: '\b((?i:Response))\b(?:(?i:(\.)(AddHeader|AppendToLog|BinaryWrite|Clear|End|Flush|Redirect|Write)|(Buffer|CacheControl|Charset|CodePage|ContentType|Expires|ExpiresAbsolute|IsClientConnected|LCID|PICS|Status)|(Cookies))\b)?'
+    - match: '\b((?i:Response))\b(?:(?i:(\.)(?:(AddHeader|AppendToLog|BinaryWrite|Clear|End|Flush|Redirect|Write)|(Buffer|CacheControl|Charset|CodePage|ContentType|Expires|ExpiresAbsolute|IsClientConnected|LCID|PICS|Status)|(Cookies)))\b)?'
       captures: # https://msdn.microsoft.com/en-us/library/ms525405%28v=vs.90%29.aspx
         1: support.class.asp
         2: keyword.object-access.asp
         3: support.function.asp
         4: support.property.asp
         5: support.class.collection.asp
-    - match: '\b((?i:Server))\b(?:(?i:(\.)(CreateObject|Execute|GetLastError|HTMLEncode|MapPath|Transfer|URLEncode)|(ScriptTimeout))\b)?'
+    - match: '\b((?i:Server))\b(?:(?i:(\.)(?:(CreateObject|Execute|GetLastError|HTMLEncode|MapPath|Transfer|URLEncode)|(ScriptTimeout)))\b)?'
       captures: # https://msdn.microsoft.com/en-us/library/ms525541%28v=vs.90%29.aspx
         1: support.class.asp
         2: keyword.object-access.asp
         3: support.function.asp
         4: support.property.asp
-    - match: '\b((?i:Server))\b(?:(?i:(\.)(Abandon)|(CodePage|LCID|SessionID|Timeout)|(Contents|StaticObjects))\b)?'
+    - match: '\b((?i:Server))\b(?:(?i:(\.)(?:(Abandon)|(CodePage|LCID|SessionID|Timeout)|(Contents|StaticObjects)))\b)?'
       captures: # https://msdn.microsoft.com/en-us/library/ms524319%28v=vs.90%29.aspx
         1: support.class.asp
         2: keyword.object-access.asp
@@ -414,7 +432,7 @@ contexts:
         1: support.class.asp
         2: keyword.object-access.asp
         3: support.function.asp
-    - match: '\b((?i:Application))\b(?:(?i:(\.)(Lock|Unlock)|(Contents|StaticObjects))\b)?'
+    - match: '\b((?i:Application))\b(?:(?i:(\.)(?:(Lock|Unlock)|(Contents|StaticObjects)))\b)?'
       captures: # https://msdn.microsoft.com/en-us/library/ms524319%28v=vs.90%29.aspx
         1: support.class.asp
         2: keyword.object-access.asp
@@ -424,6 +442,10 @@ contexts:
       scope: support.function.event.asp
     - match: '{{identifier}}'
       scope: meta.variable-reference.asp
+    - match: '(\[[^\]\n]*)\n'
+      captures:
+        1: meta.variable-reference.asp
+        2: invalid.illegal.unclosed-variable-identifier.asp
     - match: \(
       push: inside_parens
     - include: allow_line_continuation
@@ -511,4 +533,55 @@ contexts:
     - include: allow_statement_separator
     - match: $
       pop: true
+    - include: expression
+
+  inside_control_flow_do:
+    - meta_scope: meta.do.block.asp
+    - match: '\b(?i:Loop){{whitespace_or_end_of_statement}}'
+      set:
+        - meta_scope: keyword.control.flow.asp
+        - include: allow_line_continuation
+        - match: '\b(?i:While|Until){{whitespace_or_end_of_statement}}'
+          scope: keyword.control.flow.asp
+          set: expression_until_end_of_statement
+        - match: ''
+          pop: true
+    - include: statements
+
+  inside_control_flow_while:
+    - meta_scope: meta.while.block.asp
+    - match: '\b(?i:Wend){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      pop: true
+    - include: statements
+
+  inside_control_flow_for:
+    - meta_scope: meta.for.block.asp
+    - match: '\b(?i:Next){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      pop: true
+    - include: statements
+
+  control_flow_foreach_in:
+    - meta_scope: meta.for.block.asp
+    - match: '\b(?i:In){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      set: [inside_control_flow_for, expression_until_end_of_statement]
+
+  control_flow_forto:
+    - meta_scope: meta.for.block.asp
+    - match: '\b(?i:To){{whitespace_or_end_of_statement}}'
+      scope: keyword.control.flow.asp
+      set:
+        - include: allow_line_continuation
+        - match: '\b(?i:Step){{whitespace_or_end_of_statement}}'
+          scope: keyword.control.flow.asp
+          set: [inside_control_flow_for, expression_until_end_of_statement]
+        - match: ':'
+          scope: keyword.operator.statement-separator.asp
+          set: inside_control_flow_for
+        - match: \n
+          set: inside_control_flow_for
+        - include: expression
+    - include: not_end_of_statement
     - include: expression
