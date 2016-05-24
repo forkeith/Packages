@@ -83,10 +83,45 @@ contexts:
       push:
         - match: '\?>'
           scope: punctuation.section.embedded.end.php
-          push: scope:text.html.basic
-          with_prototype:
+          push:
+            - match: '\s*$' # eat whitespace so that the lookaheads on the next match patterns can match the next line if appropriate
+              push:
+                - match: ^(?=\s*\S)
+                  pop: true
+            - match: (?:(\s*')|(\s*"))?\s*((\}?\)(?=\.\w)?)|(?=;\s*($|//|/\*))) # an optional closing quote, followed by an optional }, a ) and either a . and a word char - or a semi colon and the end of the line or the beginning of a comment
+              captures:
+                1: string.quoted.single.js punctuation.definition.string.end.js
+                2: string.quoted.double.js punctuation.definition.string.end.js
+              push: scope:source.js
+              with_prototype:
+                - match: '(?=<\?)'
+                  pop: true
+            - match: (?=\s*(?:\$\(|var\s)) # either a $( or "var" followed by a space
+              push: scope:source.js
+              with_prototype:
+              - match: '(?=<\?)'
+                pop: true
+            - match: '(\s*")?(?=[^<>]*>|\s+\w+=\s*")' # if the next occurrence of a < or > is a >, we are inside a tag. If it looks like an attribute is being defined, we are probably in a tag
+              scope: string.quoted.double.html punctuation.definition.string.end.html
+              push:
+                - meta_scope: meta.tag.after-embedded-php.any.html
+                - include: scope:text.html.basic#tag-stuff
+              with_prototype:
+              - match: '(?=<\?)'
+                pop: true
+              - match: '>'
+                scope: punctuation.definition.tag.end.html
+                set: scope:text.html.basic
+                with_prototype:
+                  - match: '(?=<\?)'
+                    pop: true
             - match: '(?=<\?)'
               pop: true
+            - match: ''
+              push: scope:text.html.basic
+              with_prototype:
+                - match: '(?=<\?)'
+                  pop: true
         - match: '<\?(php)?'
           scope: punctuation.section.embedded.begin.php
           pop: true

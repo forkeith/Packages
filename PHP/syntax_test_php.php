@@ -660,10 +660,10 @@ class OutputsHtml {
 //           ^ meta.function meta.block meta.block punctuation.definition.block.begin
             ?>
 //          ^^ punctuation.section.embedded.end
-//            ^ embedding.php text.html - (source.php & - source.php text.html)
 //         ^ - (embedding.php text.html - (source.php & - source.php text.html))
             <span></span>
 //          ^^^^^^ meta.tag
+//          ^ embedding.php text.html - (source.php & - source.php text.html)
             <?
 //          ^^ punctuation.section.embedded.begin
 //            ^ - (embedding.php text.html - (source.php & - source.php text.html))
@@ -671,14 +671,70 @@ class OutputsHtml {
 //      ^ meta.function meta.block meta.block punctuation.definition.block.end
         ?>
 //      ^^ punctuation.section.embedded.end
-//        ^ embedding.php text.html - (source.php & - source.php text.html)
 //     ^ - (embedding.php text.html - (source.php & - source.php text.html))
         <div class="acf-gallery-side-info acf-cf<?php if () { echo ' class-name'; } ?>"></div>
+//      ^ embedding.php text.html - (source.php & - source.php text.html)
 //      ^^^^  meta.tag
 //                                              ^^^^^ punctuation.section.embedded.begin
+//                                                                                    ^ meta.tag string.quoted.double.html punctuation.definition.string.end.html
+//                                                                                     ^ meta.tag punctuation.definition.tag.end.html
 //                                                                                  ^^ punctuation.section.embedded.end
 //                                                                                      ^^^^^^ meta.tag
+        <span <?= " " ?> class="class-name"></span>
+//      ^^^^^^ meta.tag
+//                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.tag
+//                       ^^^^^ meta.attribute-with-value.class.html entity.other.attribute-name.class.html
+        <span <?= " " ?>></span>
+//      ^^^^^^ meta.tag
+//                      ^^^^^^^^ meta.tag
+//                      ^ punctuation.definition.tag.end.html
         <?php
 //      ^^^^^ punctuation.section.embedded.begin
     }
 }
+?>
+<script type="text/javascript">
+    $(function(){
+        <?php
+//      ^^^^^ punctuation.section.embedded.begin
+        $array = ['input_class_1' => 'input_val_1', 'input_class_2' => 'input_val_2']; //Data usually pulled from DB
+//                                                                                     ^^ punctuation.definition.comment.php
+        if (true) {
+        ?>
+        var array = <?php echo json_encode($array) ?>;
+//      ^^^ storage.type.js
+//                        ^^^^ support.function.construct.php
+//                             ^^^^^^^^^^^ support.function.json.php
+//                                                   ^ punctuation.terminator.statement.js
+        array = <?php echo json_encode($array) ?>; // javascript comment
+//                    ^^^^ support.function.construct.php
+//                         ^^^^^^^^^^^ support.function.json.php
+//                                               ^ punctuation.terminator.statement.js
+//                                                 ^^ punctuation.definition.comment.js
+        
+        $(function(){
+            <?php
+            foreach($array as $k => $v){
+            ?>
+            $('.<?php echo $k; ?>').val("<?php echo $v; ?>");
+//          ^ variable.other.dollar.only.js punctuation.dollar.js
+//                               ^ string.quoted.single.js punctuation.definition.string.end.js
+//                                ^ - invalid.illegal.stray-bracket-end.js
+//                                                        ^ string.quoted.double.js punctuation.definition.string.end.js
+//                                                         ^ - invalid.illegal.stray-bracket-end.js
+//                                                          ^ punctuation.terminator.statement.js
+            var test = "<?php echo $v; ?>";
+//                                       ^ string.quoted.double.js punctuation.definition.string.end.js
+//                                        ^ punctuation.terminator.statement.js
+            <?php
+            }
+            ?>
+        });
+//       ^ - invalid.illegal.stray-bracket-end.js
+//        ^ punctuation.terminator.statement.js        
+        <?php
+        }
+//      ^ embedding.php text.html.basic source.js.embedded.html meta.function-call.js meta.group.js meta.block.js meta.embedded.block.php source.php meta.block.php punctuation.definition.block.end.php
+        ?>
+    });
+</script>
