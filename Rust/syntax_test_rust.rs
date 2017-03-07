@@ -1,11 +1,13 @@
 // SYNTAX TEST "Packages/Rust/Rust.sublime-syntax"
 
 // Line comments
-// <- comment.line.double-slash
-// ^^^^^^^^^^^^^ comment.line.double-slash
+// <- comment.line.double-slash punctuation.definition.comment
+// ^^^^^^^^^^^^^^ comment.line.double-slash
+
+// <- - comment
 /// Line doc comments
 // <- comment.line.documentation
-// ^^^^^^^^^^^^^ comment.line.documentation
+// ^^^^^^^^^^^^^^^^^^^ comment.line.documentation
 
 /*!
 // <- comment.block.documentation
@@ -21,6 +23,7 @@ let c = 'c';
 // <- storage.type
 //    ^ keyword.operator
 //      ^^^ string.quoted.single
+//         ^ punctuation.terminator
 let b = b'c';
 // <- storage.type
 //    ^ keyword.operator
@@ -138,6 +141,7 @@ extern crate foo;
 //^^^^ keyword.other
 //    ^ - keyword.other
 //     ^^^^^ keyword.other
+//              ^ punctuation.terminator
 
 mod trafile;
 // <- storage.type.module
@@ -149,6 +153,7 @@ pub use self::trafile::*;
 // <- storage.modifier
 //   ^ keyword.other
 //      ^^^^^^^^^^^^^^^ meta.path
+//          ^^ punctuation.accessor
 
 use std::fmt;
 // <- keyword.other
@@ -161,7 +166,9 @@ use foo::Bar;
 //  ^^^^^ meta.path
 use foo::{Baz, QUX, quux};
 //  ^^^^^ meta.path
+//     ^^ punctuation.accessor
 //       ^^^^^^^^^^^^^^^^ meta.block
+//           ^ punctuation.separator
 //             ^^^ constant.other
 
 String my_var = format!("Hello {0}", "World");
@@ -172,7 +179,9 @@ String my_var = format!("Hello {0}", "World");
 //                     ^^^^^^^^^^^^^^^^^^^^^^ meta.group
 //                      ^^^^^^^^^^^ string.quoted.double
 //                             ^^^ constant.other.placeholder
+//                                 ^ punctuation.separator
 //                                          ^ punctuation.definition.group.end
+//                                           ^ punctuation.terminator
 
 my_var = format!("Hello {name}, how are you?",
 //     ^ keyword.operator
@@ -217,6 +226,7 @@ impl fmt::Display for PrintableStruct {
 // <- storage.type.impl
 //^^ storage.type.impl
 //   ^^^^^ meta.path
+//      ^^ punctuation.accessor
 //                ^^^ keyword.other
 //                    ^^^^^^^^^^^^^^^ entity.name.impl
 //                                    ^ meta.block punctuation.definition.block.begin
@@ -229,6 +239,7 @@ impl fmt::Display for PrintableStruct {
 //        ^ punctuation.definition.parameters.begin
 //         ^ keyword.operator
 //          ^^^^ variable.parameter
+//              ^ punctuation.separator.parameters
 //                ^ variable.parameter
 //                 ^ punctuation.separator
 //                   ^ keyword.operator
@@ -243,8 +254,10 @@ impl fmt::Display for PrintableStruct {
 //      ^^^^^^ support.macro
 //            ^^^^^^^^^^^^^^^^^ meta.group
 //            ^ punctuation.definition.group.begin
+//              ^ punctuation.separator
 //                ^^^^ string.quoted.double
 //                 ^^ constant.other.placeholder
+//                          ^ punctuation.accessor.dot
 //                            ^ punctuation.definition.group.end
     }
 // ^^ meta.function meta.block
@@ -328,6 +341,7 @@ struct Nil;
 struct Pair(i32, i32);
 // ^^^^^^^^^^^^^^^^^^ meta.struct
 //          ^^^ storage.type
+//             ^ punctuation.separator
 //               ^^^ storage.type
 //                   ^ - meta.struct
 
@@ -338,6 +352,7 @@ enum OperatingSystem
 {
 // <- meta.enum meta.block punctuation.definition.block.begin
     Osx,
+//     ^ punctuation.separator
     Windows,
     Linux,
     Bsd(String),
@@ -587,6 +602,7 @@ impl Point
     // ^^^^^^ entity.name.function
         self.x *= 2;
         self.y *= 2;
+        //  ^ punctuation.accessor.dot
     }
 }
 
@@ -605,6 +621,7 @@ let inferred_closure = |i, j: u32| i + 1;
 //                     ^^^^^^^^^^^ meta.function.parameters
 //                     ^ punctuation.definition.parameters.begin
 //                      ^ variable.parameter
+//                       ^ punctuation.separator
 //                         ^ variable.parameter
 //                          ^ punctuation.separator
 //                            ^^^ storage.type
@@ -637,6 +654,7 @@ macro_rules! print_result {
 
 
 pub fn from_buf_reader<T>(s: io::BufReader<T>) -> Result<isize, &'static str>
+//                                                            ^ punctuation.separator
 //                                                              ^ keyword.operator
     where T: io::Read
 //  ^ keyword.other
@@ -656,6 +674,7 @@ pub fn from_buf_reader<T>(s: io::BufReader<T>) -> Result<isize, &'static str>
     let mut starts_stops = eat_numbers!(relief_count_total * 2, "starts and stops");
 
     let starts = starts_stops.split_off(relief_count_total);
+    //                       ^ punctuation.accessor.dot
     let stops = starts_stops;
 
     unimplemented!();
@@ -783,6 +802,7 @@ macro_rules! forward_ref_binop [
 //                                           ^ meta.macro meta.group meta.block meta.impl meta.block punctuation.definition.block.begin
             type Output = <$t as $imp<$u>>::Output;
 //                        ^^^^^^^^^^^^^^^^ meta.generic
+//                            ^^ keyword.operator
 //                                        ^^ meta.path
 
             #[inline]
@@ -937,3 +957,12 @@ pub const FOO: Option<[i32; 1]> = Some([1]);
 //                        ^ punctuation.separator
 //                          ^ constant.numeric
 //                           ^ punctuation.definition.group.end.rust
+
+fn abc() {
+    println!("{}hello\
+//                   ^ punctuation.separator.continuation.line.rust
+         world, there is no whitespace between hello and world in the output", 0o202u64);
+}
+
+type TestType = HashMap<*const ConstHere, Option<OptionHere>, BuildHasherDefault<FnvHasher>>;
+//                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.generic - invalid

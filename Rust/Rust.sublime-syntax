@@ -149,9 +149,10 @@ contexts:
     - include: strings
     - include: chars
 
-    - match: '\b[[:lower:]_][[:lower:][:digit:]_]*(?=\()'
+    - match: '(\.)?\b[[:lower:]_][[:lower:][:digit:]_]*(?=\()'
       scope: support.function.rust
-
+      captures:
+        1: punctuation.accessor.dot.rust
     - match: '\b((?:format|print|println)!)\s*(\()'
       captures:
         1: support.macro.rust
@@ -172,6 +173,7 @@ contexts:
         - meta_content_scope: meta.group.rust
         - include: comments
         - match: ','
+          scope: punctuation.separator.rust
           set:
             - meta_content_scope: meta.group.rust
             - include: format-string
@@ -315,8 +317,10 @@ contexts:
     - match: '\|'
       scope: punctuation.definition.parameters.end.rust
       pop: true
-    - match: \bself\b
+    - match: \bself\b(\.)?
       scope: variable.parameter.rust
+      captures:
+        1: punctuation.accessor.dot.rust
     - match: '({{identifier}})\s*(?:(:(?!:))|(?=\||,))'
       captures:
         1: variable.parameter.rust
@@ -331,6 +335,8 @@ contexts:
       scope: storage.modifier.rust
     - match: '''{{identifier}}(?!\'')\b'
       scope: storage.modifier.lifetime.rust
+    - match: ','
+      scope: punctuation.separator.rust
 
   closure-return:
     - meta_content_scope: meta.function.closure.rust
@@ -380,7 +386,7 @@ contexts:
         - include: strings
         - match: '(?=\S)'
           pop: true
-    - match: '(?=>|[^ \t\n\$=<_+''(),&:\[\][:alnum:]])'
+    - match: '(?=>|[^ \t\n\$=<_+''()*,&:\[\][:alnum:]])'
       pop: true
     - match: '<'
       scope: punctuation.definition.generic.begin.rust
@@ -407,9 +413,11 @@ contexts:
               pop: true
         - include: generic-angles-contents
     - include: type-any-identifier
-    - match: ':'
+    - match: '[:,]'
       scope: punctuation.separator.rust
     - match: '\+'
+      scope: keyword.operator.rust
+    - match: '\bas\b'
       scope: keyword.operator.rust
 
   type-any-identifier:
@@ -432,14 +440,17 @@ contexts:
         - include: type-any-identifier
     - match: '''{{identifier}}(?!\'')\b'
       scope: storage.modifier.lifetime.rust
-    - match: '\b([[:upper:]]|_*[[:upper:]][[:alnum:]_]*[[:lower:]][[:alnum:]_]*)\b::'
+    - match: '\b([[:upper:]]|_*[[:upper:]][[:alnum:]_]*[[:lower:]][[:alnum:]_]*)\b(::)'
       scope: meta.path.rust storage.type.rust
       captures:
         1: storage.type.rust
-    - match: '{{identifier}}::'
+        2: punctuation.accessor.rust
+    - match: '{{identifier}}(::)'
       scope: meta.path.rust
+      captures:
+        1: punctuation.accessor.rust
     - match: '::(?={{identifier}})'
-      scope: meta.path.rust
+      scope: meta.path.rust punctuation.accessor.rust
     - match: '(?=<)'
       push: generic-angles
     - match: '\('
@@ -492,6 +503,8 @@ contexts:
         - meta_scope: meta.group.rust
         - include: comments
         - include: type-any-identifier
+        - match: ','
+          scope: punctuation.separator.rust
 
   struct-classic:
     - meta_scope: meta.struct.rust
@@ -707,6 +720,8 @@ contexts:
             1: variable.parameter.rust
             2: punctuation.separator.rust
         - include: type-any-identifier
+        - match: ','
+          scope: punctuation.separator.parameters.rust
 
   fn-return:
     - meta_scope: meta.function.rust
@@ -758,24 +773,28 @@ contexts:
   comments:
     - include: block-comments
     - match: "//[!/]"
+      scope: punctuation.definition.comment.rust
       push:
         - meta_scope: comment.line.documentation.rust
-        - match: $
+        - match: $\n?
           pop: true
     - match: //
+      scope: punctuation.definition.comment.rust
       push:
         - meta_scope: comment.line.double-slash.rust
-        - match: $
+        - match: $\n?
           pop: true
 
   block-comments:
     - match: '/\*[!\*][^\*/]'
+      scope: punctuation.definition.comment.rust
       push:
         - meta_scope: comment.block.documentation.rust
         - match: \*/
           pop: true
         - include: block-comments
     - match: /\*
+      scope: punctuation.definition.comment.rust
       push:
         - meta_scope: comment.block.rust
         - match: \*/
@@ -858,6 +877,8 @@ contexts:
           scope: punctuation.definition.string.end.rust
           pop: true
         - include: escaped-char
+        - match: '\\(?=\n)'
+          scope: punctuation.separator.continuation.line.rust
 
   raw-string:
     - match: (r)(#*)"
@@ -882,6 +903,8 @@ contexts:
           pop: true
         - include: escaped-char
         - include: format-escapes
+        - match: '\\(?=\n)'
+          scope: punctuation.separator.continuation.line.rust
 
   format-raw-string:
     - match: (r)(#*)"
@@ -961,18 +984,23 @@ contexts:
         - meta_scope: meta.path.rust
         - include: no-path-identifiers
         - match: '::'
+          scope: punctuation.accessor.rust
           set: no-type-names
-    - match: '{{identifier}}::'
+    - match: '{{identifier}}(::)'
       scope: meta.path.rust
+      captures:
+        1: punctuation.accessor.rust
       push: no-type-names
     - match: '::(?={{identifier}})'
-      scope: meta.path.rust
+      scope: meta.path.rust punctuation.accessor.rust
       push: no-type-names
     - include: no-path-identifiers
 
   no-path-identifiers:
-    - match: \b(self)\b
+    - match: \b(self)\b(\.)?
       scope: variable.language.rust
+      captures:
+        2: punctuation.accessor.dot.rust
     - match: \b(super)\b
       scope: keyword.other.rust
 
