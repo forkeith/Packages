@@ -1250,3 +1250,19 @@ not a table |
 |`test | me |
 |^ invalid.deprecated.unescaped-backticks
 |      ^ punctuation.separator.table-cell
+
+```SQL
+SELECT *
+--|^^^ markup.raw.code-fence.markdown source.sql keyword.other.DML.sql
+--|    ^ keyword.operator.star.sql
+FROM schema.table_name
+--|^ keyword.other.DML.sql
+```
+|^^^ punctuation.definition.raw.code-fence.end - source.sql
+
+```XML
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- |^^^^^^^ markup.raw.code-fence.markdown text.xml meta.tag.preprocessor.xml entity.other.attribute-name.localname.xml
+-->
+```
+|^^^ punctuation.definition.raw.code-fence.end - text.xml

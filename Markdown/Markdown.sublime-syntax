@@ -74,6 +74,19 @@ variables:
             (?:{{balance_square_brackets}}*\|){2}       # at least 2 non-escaped pipe chars on the line
         |   (?!\s+\|){{balance_square_brackets}}+\|(?!\s+$){{balance_square_brackets}}+
         )
+    fenced_code_block_start: |-
+        (?x:
+          ^[ ]{0,3}    # up to 3 spaces
+          (
+            `{3,}      #   3 or more backticks
+            (?![^`]+`) #   not followed by any more backticks on the same line
+            (?!`)      #   makes the {3,} possessive
+          |            # or
+            ~{3,}      #   3 or more tildas
+            (?![^~]+~) #   not followed by any more tildas on the same line
+            (?!~)      #   makes the {3,} possessive
+          )
+        )
 contexts:
   main:
     - match: |-
@@ -610,19 +623,40 @@ contexts:
     - include: scope:text.html.basic
   fenced-code-block:
     - match: |-
-         (?x)
-          ^[ ]{0,3}    # up to 3 spaces
-          (
-            `{3,}      #   3 or more backticks
-            (?![^`]+`) #   not followed by any more backticks on the same line
-            (?!`)      #   makes the {3,} possessive
-          |            # or
-            ~{3,}      #   3 or more tildas
-            (?![^~]+~) #   not followed by any more tildas on the same line
-            (?!~)      #   makes the {3,} possessive
-          )
+        (?x)
+          {{fenced_code_block_start}}
+          ((?i:SQL))   # the literal text "SQL" in any case
+          .*$          # all characters until EOL
+      captures:
+        1: punctuation.definition.raw.code-fence.begin.markdown
+        2: constant.other.language-name.markdown
+      push:
+        - meta_scope: markup.raw.code-fence.markdown
+        - meta_content_scope: source.sql
+        - match: '[ ]{,3}\1\s*$'
+          scope: punctuation.definition.raw.code-fence.end.markdown
+          pop: true
+        - include: scope:source.sql
+    - match: |-
+        (?x)
+          {{fenced_code_block_start}}
+          ((?i:XML))   # the literal text "SQL" in any case
+          .*$          # all characters until EOL
+      captures:
+        1: punctuation.definition.raw.code-fence.begin.markdown
+        2: constant.other.language-name.markdown
+      push:
+        - meta_scope: markup.raw.code-fence.markdown
+        - meta_content_scope: text.xml
+        - match: '[ ]{,3}\1\s*$'
+          scope: punctuation.definition.raw.code-fence.end.markdown
+          pop: true
+        - include: scope:text.xml
+    - match: |-
+        (?x)
+          {{fenced_code_block_start}}
           ([\w-]*)     # any number of word characters or dashes
-          .*$          # all characters until eol
+          .*$          # all characters until EOL
       captures:
         1: punctuation.definition.raw.code-fence.begin.markdown
         2: constant.other.language-name.markdown
