@@ -28,19 +28,20 @@
 			    )
 			|   \{[^}"']*$                                                                          # open curly braces that don't have close braces or string punctuation after them
 			|   <!--(?!.*-->)                                                                       # comments that don't close themselves on the same line
-			|   (?!                                                                                 # negative lookahead
-			        (?<root>
-			            (?<skip>
-			                [^<>]++                                                                 # anything that is not an angle bracket
-			            |   <(\?|(?i:area|base|br|col|frame|hr|html|img|input|link|meta|param)\b[^>]*+|[^>]*/)>     # skip self closing tags (tags that end with />, as well as known self closing tags))
-			            )*+
-			            (?<html_opentag><(?<html_tagname>\w++\b(?=\s|>))[^>]*+>)                    # an open HTML tag
-			            \g<root>?                                                                   # optional recursion
-			            \g<skip>                                                                    # text or self closing HTML tags
-			            </\k<html_tagname+0>\s*>                                                    # the closing HTML tag that corresponds to the most recent opening one matched at the same level of recursion
-			        )++
-			    )
-			    .*(?!\g<skip>)<\w++\b(?=\s|>)[^>]*+>                                                # an open HTML tag that is not self-closing - if this matches, then that tag isn't closed later on in the same line. We can't use \g<html_opentag> here for some reason as it messes up the results
+			|  (?=.*<[A-Za-z0-9-])                                                                  # fail fast if there is nothing that could be an opening HTML tag on the line
+			   (?<stray_closetags>\g<skip>*+</[A-Za-z0-9-]++\s*>)*+                                 # closing tags that relate to previous lines
+			   (?<root>
+			        (?<skip>
+			            [^<>]++                                                                     # anything that is not an angle bracket
+			        |   (?<self_closing>(?><\?.*?\?>|<(?!/)(?i:area|base|br|col|frame|hr|img|input|link|meta|param)\b[^>]*+>|[^>]++(?<=/)>))     # skip self closing tags (tags that end with />, as well as known self closing tags))
+			        )*+
+			        (?<html_opentag><(?<html_tagname>[A-Za-z0-9-]++\b(?=[\s>]))[^>]*+>)             # an open HTML tag (non-self closing)
+			            \g<root>*+                                                                  # optional recursion
+			            \g<skip>*+                                                                  # text or self closing HTML tags
+			            (?></\k<html_tagname+0>\s*>)                                                # the closing HTML tag that corresponds to the most recent opening one matched at the same level of recursion
+			    )*+
+			    \g<skip>*+                                                                          # text or self closing HTML tags
+			    <\w++
 			)
 		]]></string>
 		<key>bracketIndentNextLinePattern</key>
