@@ -28,8 +28,8 @@
 			    )
 			|   \{[^}"']*$                                                                          # open curly braces that don't have close braces or string punctuation after them
 			|   <!--(?!.*-->)                                                                       # comments that don't close themselves on the same line
-			|   <(?!\?|(?i:area|base|br|col|frame|hr|html|img|input|link|meta|param)\b|[^>]*/>)     # skip self closing tags (tags that end with />, as well as known self closing tags)
-			        (?<html_tag>[A-Za-z0-9-]+)(?=\s|>)\b[^>]*>(?!.*</\k<html_tag>\s*>)              # valid HTML tags that don't close themselves on the same line
+			|   .*<(?!\?|(?i:area|base|br|col|frame|hr|html|img|input|link|meta|param)\b|[^>]*/>)   # skip self closing tags (tags that end with />, as well as known self closing tags)
+			        (?<html_tag>[A-Za-z0-9-]+)(?=\s|>)\b[^>]*>(?!.*</\k<html_tag>\s*>)              # a valid non-self-closing HTML tag that doesn't close itself on the same line
 			)
 		]]></string>
 		<key>bracketIndentNextLinePattern</key>
