@@ -1,5 +1,23 @@
 ;; SYNTAX TEST "Packages/Clojure/Clojure.sublime-syntax"
 
+(ns example.st
+;; <- meta.function.namespace.clojure
+;;^^^^^^^^^^^^^ meta.function.namespace.clojure
+;;^ support.function.namespace.clojure
+;;  ^^^^^^^ entity.name.namespace.clojure source.symbol.clojure
+;;         ^ entity.name.namespace.clojure keyword.operator.classpath.clojure
+;;          ^^ entity.name.namespace.clojure source.symbol.clojure
+  (:require [clj-http.client :as http]
+;; ^^^^^^^^ support.other.keyword.namespace.clojure
+;;           ^^^^^^^^ source.symbol.clojure
+;;                   ^ keyword.operator.classpath.clojure
+;;                    ^^^^^^ source.symbol.clojure
+;;                           ^^^ support.other.keyword.namespace.clojure
+;;                               ^^^^ source.symbol.clojure
+            [clojure.string :as str]))
+;;                                   ^ meta.function.namespace.clojure
+;;                                    ^ - meta.function.namespace.clojure
+
   (+ 3 3)
 ;;<- - meta.sexpr.clojure
 ;;^^^^^^^ meta.sexpr.clojure
@@ -105,3 +123,63 @@
 ;;                  ^^ punctuation.definition.string.begin.clojure
 ;;                                     ^ punctuation.definition.string.end.clojure
 ;;                                      ^ - string.regexp.clojure
+
+(def ^:dynamic url "https://api.github.com/")
+;;^^ storage.type.variable.clojure
+;;   ^ constant.other.metadata.read.clojure
+;;    ^ keyword.operator.symbol.clojure - source.symbol.clojure
+;;    ^^^^^^^^ constant.string.symbol.clojure
+;;            ^ - constant
+;;             ^^^ source.symbol.clojure
+;;                ^ - source.symbol.clojure
+;;                 ^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.clojure
+(def ^:dynamic defaults {})
+;;   ^ constant.other.metadata.read.clojure
+;;    ^ keyword.operator.symbol.clojure - source.symbol.clojure
+;;    ^^^^^^^^ constant.string.symbol.clojure
+;;     ^^^^^^^ source.symbol.clojure
+;;             ^^^^^^^^ support.function.match.clojure
+;;                      ^^ constant.language.clojure
+
+(defn query-map
+;;^^^ storage.type.function.type.clojure
+;;    ^^^^^^^^^ source.symbol.clojure
+  "Turn keywords into strings, and replace hyphens with underscores."
+;;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.docstring.clojure
+  [entries]
+;;^^^^^^^^^ meta.function.parameters.vector.clojure
+;;^ punctuation.definition.vector.begin.clojure
+;; ^^^^^^^ variable.parameter.clojure source.symbol.clojure
+;;        ^ punctuation.definition.vector.end.clojure
+  (into {}
+;; ^^^^ keyword.other.clojure
+;;      ^^ constant.language.clojure
+        (for [[k v] entries]
+;;       ^^^ keyword.control.clojure
+;;            ^ punctuation.definition.vector.begin.clojure
+;;             ^ variable.parameter.clojure source.symbol.clojure
+;;              ^ - variable - source.symbol.clojure
+;;               ^ variable.parameter.clojure source.symbol.clojure
+;;                ^ punctuation.definition.vector.end.clojure
+;;                  ^^^^^^^ source.symbol.clojure
+          [(.replace (name k) "-" "_") v])))
+;;           ^^^^^^^ support.function.clojure
+;;                    ^^^^ support.function.clojure
+;;                         ^ source.symbol.clojure
+;;                            ^^^ string.quoted.double.clojure
+;;                                ^^^ string.quoted.double.clojure
+;;                                     ^ source.symbol.clojure
+;;                                      ^ punctuation.definition.vector.end.clojure
+
+(defn parse-json
+  "Same as json/parse-string but handles nil gracefully."
+  [s] (when s (json/parse-string s true)))
+;;^^^ meta.function.clojure meta.function.body.clojure meta.function.parameters.vector.clojure
+;;^ punctuation.definition.vector.begin.clojure
+;; ^ variable.parameter.clojure source.symbol.clojure
+;;  ^ punctuation.definition.vector.end.clojure
+;;             ^^^^ source.symbol.clojure
+;;                 ^ keyword.operator.qualified.clojure - source.symbol.clojure
+;;                  ^^^^^^^^^^^^ source.symbol.clojure
+;;                               ^ source.symbol.clojure
+;;                                 ^^^^ constant.language.clojure
