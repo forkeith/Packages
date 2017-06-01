@@ -183,3 +183,57 @@
 ;;                  ^^^^^^^^^^^^ source.symbol.clojure
 ;;                               ^ source.symbol.clojure
 ;;                                 ^^^^ constant.language.clojure
+
+;; https://clojuredocs.org/clojure.core/defmethod
+(defmulti greeting
+;;^^^^^^^ storage.type.variable.clojure
+;;        ^^^^^^^^ entity.name.function.clojure source.symbol.clojure
+  (fn [x] (x "language")))
+;;^^^^^^^^^^^^^^^^^^^^^^^ meta.function.lambda.clojure
+;; ^^ storage.type.function.type.clojure
+;;    ^^^ meta.function.parameters.vector.clojure
+;;     ^ variable.parameter.clojure source.symbol.clojure
+;;         ^ source.symbol.clojure
+;;           ^^^^^^^^^^ string.quoted.double.clojure
+
+(defmethod greeting "English" [_]
+;;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.multi_method.clojure
+;;^^^^^^^^ storage.type.function.type.clojure
+;;         ^^^^^^^^ entity.name.function.clojure source.symbol.clojure
+;;                  ^^^^^^^^^ string.quoted.double.clojure
+;;                            ^^^ meta.function.parameters.vector.clojure
+ "Hello!")
+;;^^^^^^^ string.quoted.double.clojure
+;;       ^ meta.function.multi_method.clojure
+;;        ^ - meta.function.multi_method.clojure
+
+(def english-map {"id" "1", "language" "English"})
+;;^^ storage.type.variable.clojure
+;;   ^^^^^^^^^^^ entity.name.function.clojure source.symbol.clojure
+;;               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.expression.map.clojure
+;;               ^ punctuation.definition.map.begin.clojure
+;;                                              ^ punctuation.definition.map.end.clojure
+
+(greeting english-map)
+;;^^^^^^^ source.symbol.clojure
+;;        ^^^^^^^^^^^ source.symbol.clojure
+
+(defmulti service-charge (fn [acct] [(account-level acct) (:tag acct)]))
+(defmethod service-charge [::acc/Basic   ::acc/Checking] [_] 25)
+(defmethod service-charge [::acc/Basic   ::acc/Savings]  [_] 10)
+(defmethod service-charge [::acc/Premium ::acc/Account]  [_]  0)
+;;                         ^^ keyword.operator.symbol.clojure
+;;                         ^^^^^^^^^^^^^ constant.string.symbol.clojure
+;;                           ^^^ source.symbol.clojure
+;;                              ^ keyword.operator.qualified.clojure
+;;                               ^^^^^^^ source.symbol.clojure
+;;                                       ^^ keyword.operator.symbol.clojure
+;;                                       ^^^^^^^^^^^^^ constant.string.symbol.clojure
+;;                                         ^^^ source.symbol.clojure
+;;                                            ^ keyword.operator.qualified.clojure
+;;                                             ^^^^^^^ source.symbol.clojure
+;;                                                       ^^^ meta.function.parameters.vector.clojure
+;;                                                        ^ variable.parameter.clojure source.symbol.clojure
+;;                                                            ^ meta.function.body.code.clojure constant.numeric.float.clojure
+
+;; <- - meta
