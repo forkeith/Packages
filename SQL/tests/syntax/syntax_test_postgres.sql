@@ -61,8 +61,7 @@ CREATE TABLE IF NOT EXISTS public.dropzone_details
 -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.create meta.group.table-columns
 --  ^^ meta.column-name
 --     ^^^^ storage.type
---          ^^^ keyword.operator.logical
---              ^^^^ constant.language.null
+--          ^^^^^^^^ storage.modifier
 --                   ^^^^^^^ storage.modifier
 --                           ^^^^^^^^^^^^^^^^ meta.function-call support.function
 --                                           ^ meta.function-call meta.group punctuation.section.arguments.begin
@@ -246,8 +245,7 @@ CREATE TABLE test2 (
     test1name               varchar(500)  NOT NULL REFERENCES test1(name) ON DELETE CASCADE ON UPDATE CASCADE,
 --  ^^^^^^^^^ meta.column-name
 --                          ^^^^^^^^^^^^ storage.type
---                                        ^^^ keyword.operator.logical
---                                            ^^^^ constant.language.null
+--                                        ^^^^^^^^ storage.modifier
 --                                                 ^^^^^^^^^^ storage.modifier
 --                                                            ^^^^^ meta.table-name
 --                                                                 ^ punctuation.section.group.begin

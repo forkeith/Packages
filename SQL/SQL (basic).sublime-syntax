@@ -106,8 +106,44 @@ contexts:
     - meta_scope: meta.toc-list.full-identifier.sql entity.name.function.sql
     - include: immediately-pop
 
+  single-identifier-after-whitespace-table-name:
+    - match: (?=\S)
+      set:
+        - table-name
+        - single-identifier
+
+  single-identifier-after-whitespace-column-alias:
+    - match: (?=\S)
+      set:
+        - column-alias
+        - single-identifier
+
+  single-identifier-after-whitespace-constraint-name:
+    - match: (?=\S)
+      set:
+        - constraint-name
+        - single-identifier
+
+  single-identifier-after-whitespace-column-name:
+    - match: (?=\S)
+      set:
+        - column-name
+        - single-identifier
+
+  single-identifier-after-whitespace-column-name-declaration:
+    - match: (?=\S)
+      set:
+        - column-name-declaration
+        - single-identifier
+
+  single-identifier-after-whitespace-database-name:
+    - match: (?=\S)
+      set:
+        - database-name
+        - single-identifier
+
   single-identifier-after-whitespace:
-    - match: \s*
+    - match: (?=\S)
       set: single-identifier
 
   single-identifier:
@@ -213,6 +249,8 @@ contexts:
     - include: else-pop
 
   after-type:
+    - match: \b(?i:(?:not\s+)?null)\b
+      scope: storage.modifier.sql
     - include: else-pop
 
   expressions-or-column-name:
@@ -236,9 +274,7 @@ contexts:
   expressions:
     - match: \b(?i:as)\b
       scope: keyword.operator.assignment.alias.sql
-      push:
-        - column-alias
-        - single-identifier-after-whitespace
+      push: single-identifier-after-whitespace-column-alias
     - match: \b(?i:case)\b
       scope: keyword.control.conditional.case.sql
       push: inside-case-expression
@@ -372,8 +408,7 @@ contexts:
       scope: keyword.other.ddl.sql
       push:
         - ddl-alter-table
-        - table-name
-        - single-identifier-after-whitespace
+        - single-identifier-after-whitespace-table-name
     - match: \b(?i:alter)\b
       scope: keyword.other.ddl.sql
       push:
@@ -402,9 +437,7 @@ contexts:
   ddl-target-on:
     - match: \b(?i:on)\b
       scope: keyword.other.sql
-      push:
-        - table-name
-        - single-identifier-after-whitespace
+      push: single-identifier-after-whitespace-table-name
     - include: else-pop
 
   ddl-table-creation-columns:
@@ -428,7 +461,7 @@ contexts:
     - match: (?=\S)
       set:
         - table-name
-        - single-identifier-after-whitespace
+        - single-identifier
 
   ddl-alter-table:
     - meta_scope: meta.alter.sql
@@ -446,36 +479,36 @@ contexts:
       scope: meta.add.sql keyword.other.sql
       push:
         - after-constraint-pop
-        - constraint-name
-        - single-identifier-after-whitespace
+        - single-identifier-after-whitespace-constraint-name
     - match: \b(?i:add\s+(?:(?:fulltext|spatial)\s+(index|key)|index))\b
       scope: meta.add.sql keyword.other.sql
     #- include: types
     - include: pop-on-top-level-reserved-word
 
   ddl-alter-column:
-    - match: \b(?i:(?:add|alter)\s+column)\b
+    - match: \b(?i:(?:add|alter))\b(?!\s+{{ddl_target}})(?i:\s+column\b)?
       scope: keyword.other.ddl.sql
       push:
+        - maybe-comma-and-another-column-definition
+        - after-type
         - expect-type
-        - column-name-declaration
-        - single-identifier-after-whitespace
-    - match: \b(?i:(?:add|alter))\b(?!\s+{{ddl_target}})
-      scope: keyword.other.ddl.sql
-      push:
-        - expect-type
-        - column-name-declaration
-        - single-identifier-after-whitespace
+        - single-identifier-after-whitespace-column-name-declaration
     - match: \b(?i:drop\s+column)\b
       scope: keyword.other.ddl.sql
-      push:
-        - column-name
-        - single-identifier-after-whitespace
+      push: single-identifier-after-whitespace-column-name
     - match: \b(?i:drop)\b(?!\s+{{ddl_target}})
       scope: keyword.other.ddl.sql
-      push:
-        - column-name
-        - single-identifier-after-whitespace
+      push: single-identifier-after-whitespace-column-name
+
+  maybe-comma-and-another-column-definition:
+    - match: ','
+      scope: punctuation.separator.sequence.sql
+      set:
+        - maybe-comma-and-another-column-definition
+        - after-type
+        - expect-type
+        - single-identifier-after-whitespace-column-name-declaration
+    - include: else-pop
 
   dml-statements:
     - match: \b(?i:select)\b
@@ -490,9 +523,7 @@ contexts:
       set: dml-update
     - match: \b(?i:(?:insert\s+into|truncate))\b
       scope: keyword.other.dml.sql
-      push:
-        - table-name
-        - single-identifier-after-whitespace
+      push: single-identifier-after-whitespace-table-name
     - match: \b(?i:set)\b
       scope: keyword.other.dml.sql
       push: set
@@ -515,9 +546,7 @@ contexts:
       pop: 1
     - match: \b(?i:constraint)\b
       scope: storage.modifier.sql
-      push:
-        - constraint-name
-        - single-identifier-after-whitespace
+      push: single-identifier-after-whitespace-constraint-name
     - include: after-constraint
     - include: expressions
     - include: ddl-creation-column
@@ -533,9 +562,7 @@ contexts:
   use-db:
     - match: \b(?i:use)\b
       scope: keyword.context.sql
-      push:
-        - database-name
-        - single-identifier-after-whitespace
+      push: single-identifier-after-whitespace-database-name
 
   dml-delete:
     - match: (?=\S)
@@ -741,8 +768,7 @@ contexts:
       scope: storage.modifier.sql
       push:
         - maybe-column-reference
-        - table-name
-        - single-identifier-after-whitespace
+        - single-identifier-after-whitespace-table-name
 
   after-constraint-pop:
     - include: after-constraint

@@ -2,6 +2,7 @@
 
 USE master
 -- <- keyword.context - constant
+-- ^ - meta.database-name
 --  ^^^^^^ meta.database-name
 
 SELECT columns FROM table WHERE
@@ -532,8 +533,7 @@ alter column bar uniqueidentifier not null
 --^^^^^^^^^^ meta.alter keyword.other.ddl
 --           ^^^ meta.alter meta.column-name
 --               ^^^^^^^^^^^^^^^^ meta.alter storage.type
---                                ^^^ meta.alter keyword.operator.logical
---                                    ^^^^ meta.alter constant.language.null
+--                                ^^^^^^^^ meta.alter storage.modifier
 
 USE AdventureWorks2012;
 GO
@@ -1309,15 +1309,13 @@ CREATE TABLE [Employee](
    [EmployeeID] [int] NOT NULL PRIMARY KEY,
 -- ^^^^^^^^^^^^ meta.column-name
 --              ^^^^^ storage.type
---                    ^^^ keyword.operator.logical
---                        ^^^^ constant.language.null
+--                    ^^^^^^^^ storage.modifier
 --                             ^^^^^^^^^^^ storage.modifier
 --                                        ^ punctuation.separator.sequence
    [FirstName] VARCHAR(250) NOT NULL,
    [LastName] VARCHAR(250) NOT NULL,
    [DepartmentID] [int] NOT NULL REFERENCES [Department](DepartmentID),
---                      ^^^ keyword.operator.logical
---                          ^^^^ constant.language.null
+--                      ^^^^^^^^ storage.modifier
 --                               ^^^^^^^^^^ storage.modifier
 --                                          ^^^^^^^^^^^^ meta.table-name
 --                                                      ^ punctuation.section.group.begin
@@ -1622,6 +1620,7 @@ CREATE UNIQUE NONCLUSTERED INDEX IX_some_index ON dbo.some_table(
 --     ^^^^^^ keyword.other
 --            ^^^^^^^^^^^^ keyword.other
 --                         ^^^^^ keyword.other
+--                              ^ - meta.toc-list - entity
 --                               ^^^^^^^^^^^^^ meta.toc-list.full-identifier entity.name.function
 --                                             ^^ keyword.other
 --                                                ^^^^^^^^^^^^^^ meta.table-name
@@ -1642,6 +1641,9 @@ AS
     SELECT table_name, column_name,
     ROW_NUMBER() OVER(ORDER BY table_name, column_name) AS sequence,
     COUNT(*) OVER() AS total_columns
+--                  ^^ keyword.operator.assignment.alias
+--                     ^^^^^^^^^^^^^ meta.column-alias
+--                    ^ - meta.column-alias
     FROM [INFORMATION_SCHEMA].columns
 )
 SELECT table_name, column_name, total_columns
@@ -1767,15 +1769,13 @@ CREATE TABLE Department
 --  ^^^^^^^^^^^^ meta.column-name variable.other.member.declaration
 --               ^^^^^^^^^ storage.type
 --                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ keyword.other
---                                                              ^^^ keyword.operator.logical
---                                                                  ^^^^ constant.language.null
+--                                                              ^^^^^^^ storage.modifier
 --                                                                      ^ punctuation.separator.sequence
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
 --  ^^^^^^^^^^ meta.column-name variable.other.member.declaration
 --             ^^^^^^^^^ storage.type
 --                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ keyword.other
---                                                          ^^^ keyword.operator.logical
---                                                              ^^^^ constant.language.null
+--                                                          ^^^^^^^ storage.modifier
 --                                                                  ^ punctuation.separator.sequence
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime)
 --  ^^^^^^^^^^^^^^^^^^^^^^ storage.modifier
@@ -1850,3 +1850,21 @@ ADD CONSTRAINT fk_inv_product_id
     ON DELETE CASCADE;
 --  ^^^^^^^^^^^^^^^^^ meta.alter storage.modifier
 --                   ^ punctuation.terminator.statement
+
+ALTER TABLE schema..addresses ADD
+    [FlatNumber] [int] NULL,
+    [BuildingNumber] [nvarchar](50) NULL,
+--^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.alter
+--^^ - meta.column-name
+--  ^^^^^^^^^^^^^^^^ meta.column-name variable.other.member.declaration
+--                   ^^^^^^^^^^^^^^ storage.type
+--                                  ^^^^ storage.modifier
+--                                      ^ punctuation.separator.sequence
+    [CountryCode] [char](2) NOT NULL,
+    [foo] [int] NULL,
+--^^^^^^^^^^^^^^^^^^^^ meta.alter
+--^^ - meta.column-name - variable
+--  ^^^^^ meta.column-name
+--        ^^^^^ storage.type - meta.column-name
+--              ^^^^ storage.modifier
+    [bar] [int] NULL
