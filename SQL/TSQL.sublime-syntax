@@ -465,7 +465,19 @@ contexts:
     - include: table-hint-without-with
     - match: \(
       scope: punctuation.section.group.begin.tsql
-      push: inside-group # column-alias-list
+      push: column-alias-list
+
+  column-alias-list:
+    - meta_scope: meta.group.column-alias-list.tsql
+    - match: \)
+      scope: punctuation.section.group.end.tsql
+      pop: 1
+    - match: ','
+      scope: punctuation.separator.sequence.sql
+    - match: (?=\S)
+      push:
+        - column-alias
+        - single-identifier
 
   table-hint-without-with:
     - match: |-

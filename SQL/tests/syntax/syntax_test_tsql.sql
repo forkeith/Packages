@@ -1569,9 +1569,9 @@ FROM    table_name AS t1
         INNER JOIN  (SELECT foo FROM bar) AS t2(id) ON t2.ID = t1.ID
 --                                        ^^ keyword.operator.assignment.alias
 --                                           ^^ meta.table-alias-name
---                                             ^^^^ meta.group
+--                                             ^^^^ meta.group.column-alias-list
 --                                             ^ punctuation.section.group.begin
---                                              ^^ meta.column-name
+--                                              ^^ meta.column-alias
 --                                                ^ punctuation.section.group.end
 --                                                  ^^ keyword.operator.join
 ----

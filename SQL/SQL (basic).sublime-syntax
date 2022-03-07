@@ -701,12 +701,16 @@ contexts:
     - meta_content_scope: meta.group.tablesample.sql
     - match: \b(?i:rows|percent)\b
       scope: constant.language.sql
-    - match: (\))(?:\s*((?i:repeatable))\b)?
-      captures:
-        1: meta.group.tablesample.sql punctuation.section.group.end.sql
-        2: constant.language.sql
-      pop: true
+    - match: \)
+      scope: meta.group.tablesample.sql punctuation.section.group.end.sql
+      set: tablesample-repeatable
     - include: expressions
+
+  tablesample-repeatable:
+    - match: \b(?i:repeatable)\b
+      scope: constant.language.sql
+      set: begin-group-or-pop
+    - include: else-pop
 
   declarations:
     - match: \b(?i:declare)\b
