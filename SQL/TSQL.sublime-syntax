@@ -8,7 +8,7 @@ extends: Packages/SQL/SQL (basic).sublime-syntax
 variables:
   string_escape: (?:'')
   simple_identifier: (?:(?:(?:##?)?|@)?\w+) # (one or two hashes OR an ampersand OR nothing) followed by a word
-  additional_reserved: \b(?i:if|while|declare|with|for|begin|end|else|print|use|raiserror|merge|backup|exec|go|bulk|insert|on|when)\b
+  additional_reserved: \b(?i:if|while|declare|with|for|begin|end|else|print|use|raiserror|merge|backup|exec|go|bulk|insert|on|when|like|as|in)\b
   enclosed_type_begin: (?:\[)
   enclosed_type_end: (?:\])
   identifier_for_lookahead: |-
@@ -63,6 +63,16 @@ contexts:
         - like-string-followed-by-unknown-escape
     - match: '%'
       scope: keyword.operator.arithmetic.tsql
+
+  possible-operator:
+    - include: operators
+    - match: \s+(?={{identifier_for_lookahead}}\s*\()(?!\b(?i:{{reserved}}|{{additional_reserved}})\b)
+      scope: invalid.illegal.expected-separator.sql
+    - match: (?={{identifier_for_lookahead}})(?!\b(?i:{{reserved}}|{{additional_reserved}})\b)(?!0x)
+      set:
+        - column-alias
+        - single-identifier
+    - include: else-pop
 
   variables:
     - match: (@)\w+

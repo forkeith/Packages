@@ -1868,3 +1868,5 @@ ALTER TABLE schema..addresses ADD
 --        ^^^^^ storage.type - meta.column-name
 --              ^^^^ storage.modifier
     [bar] [int] NULL
+
+SELECT test CAST(abc AS blah) -- TODO: a function can't be a column alias
