@@ -54,3 +54,28 @@ baz";
 /// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.double
 ///  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ constant.other.guid
 
+Regex rx = new Regex(@"\b(?<word>\w+)\s+(\k<word>)\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+///            ^^^^^ meta.instance support.type
+///                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string source.regexp
+///                                                 ^ meta.string punctuation.definition.string.end - source.regexp
+///                    ^^ keyword.control.anchor
+Match m = Regex.Match(input, @"\ba\w*\b", RegexOptions.IgnoreCase);
+///       ^^^^^ meta.function-call support.class
+///            ^ meta.function-call punctuation.accessor.dot.namespace
+///             ^^^^^ meta.function-call variable.function
+///                  ^ meta.group punctuation.section.group.begin
+///                            ^^^^^^^^ meta.string source.regexp
+///                                    ^ meta.string string.quoted.double.raw punctuation.definition.string.end - source.regexp
+
+replaced = Regex.Replace(some_value, "(?!^)([A-Z])", " $1");
+///        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function-call
+///        ^^^^^ support.class
+///             ^ punctuation.accessor.dot.namespace
+///              ^^^^^^^ variable.function
+///                     ^ punctuation.section.group.begin
+///                      ^^^^^^^^^^ variable.other
+///                                ^ punctuation.separator.argument
+///                                  ^ meta.string string.quoted.double punctuation.definition.string.begin
+///                                   ^^^^^^^^^^^^ meta.string source.regexp
+///                                               ^ meta.string string.quoted.double punctuation.definition.string.end - source.regexp
+///                                                ^ punctuation.separator.argument

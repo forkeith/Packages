@@ -1259,6 +1259,15 @@ contexts:
         - match: \(
           scope: meta.group.cs punctuation.section.group.begin.cs
           set: [constructor_arguments, arguments]
+        - match: ((?:(?:System(\.))?Text(\.))?RegularExpressions(\.))?(Regex)\s*(\()
+          captures:
+            1: meta.namespace.cs
+            2: punctuation.accessor.dot.cs
+            3: punctuation.accessor.dot.cs
+            4: punctuation.accessor.dot.cs
+            5: support.type.cs
+            6: meta.group.cs punctuation.section.group.begin.cs
+          set: [constructor_arguments, regex_arguments]
         - include: type
 
   type_no_space_pop_if_anonymous:
@@ -1328,6 +1337,18 @@ contexts:
           scope: meta.generic.cs punctuation.definition.generic.end.cs
           pop: true
         - include: type
+    - match: ((?:(?:System(\.))?Text(\.))?RegularExpressions(\.))?(Regex)(\.)(Match|IsMatch|Replace)(\()
+      scope: meta.function-call.cs
+      captures:
+        1: meta.namespace.cs
+        2: punctuation.accessor.dot.namespace.cs
+        3: punctuation.accessor.dot.namespace.cs
+        4: punctuation.accessor.dot.namespace.cs
+        5: support.class.cs
+        6: punctuation.accessor.dot.namespace.cs
+        7: variable.function.cs
+        8: meta.group.cs punctuation.section.group.begin.cs
+      push: [function_call_arguments, regex_arguments]
     - match: '((?!{{reserved}}\b){{name}})\s*(\()'
       scope: meta.function-call.cs
       captures:
@@ -1496,6 +1517,42 @@ contexts:
       pop: true
     - match: ''
       pop: true
+
+  regex_arguments:
+    # Needs interpolated strings ($", $@", and @$")
+    - match: '"'
+      scope: punctuation.definition.string.begin.cs
+      push:
+        - meta_scope: meta.string.cs string.quoted.double.cs
+        - match: '"'
+          scope: punctuation.definition.string.end.cs
+          pop: true
+        - match: ''
+          push: scope:source.regexp.cs
+          with_prototype:
+            - match: \\"
+              scope: constant.character.escape.cs
+            - match: \\{4}
+              scope: constant.character.escape.cs
+            - match: \\(?=\\)
+              scope: constant.character.escape.cs
+            - match: (?=")
+              pop: true
+    - match: '@"'
+      scope: punctuation.definition.string.begin.cs
+      push:
+        - meta_scope: meta.string.cs string.quoted.double.raw.cs
+        - match: '"'
+          scope: punctuation.definition.string.end.cs
+          pop: true
+        - match: ''
+          push: scope:source.regexp.cs
+          with_prototype:
+            - match: '""'
+              scope: constant.character.escape.cs
+            - match: (?=")
+              pop: true
+    - include: arguments
 
   arguments:
     - match: (out)\s
