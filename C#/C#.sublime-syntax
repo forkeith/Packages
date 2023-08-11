@@ -911,7 +911,7 @@ contexts:
       captures:
         1: variable.annotation.cs
         2: meta.group.cs punctuation.section.group.begin.cs
-      set: [attribute_arguments, arguments]
+      set: attribute_arguments
     - match: '({{name}})\s*(\.)'
       captures:
         1: variable.namespace.cs
@@ -921,8 +921,9 @@ contexts:
     - match: ','
       scope: punctuation.separator.annotation.cs
     - match: \]
-      scope: punctuation.definition.annotation.end.cs
+      scope: meta.annotation.cs punctuation.definition.annotation.end.cs
       pop: true
+    - include: arguments
 
   code_block_in:
     - match: (?=\S)
@@ -1484,8 +1485,14 @@ contexts:
     - meta_content_scope: meta.annotation.cs meta.group.cs
     - match: \)
       scope: punctuation.section.group.end.cs
-    - match: ''
-      set: attribute_in
+    - match: '({{name}})\s*(=)(?=[^>=])'
+      captures:
+        1: variable.parameter.cs
+        2: keyword.operator.assignment.cs
+      push: line_of_code_in
+    # - match: ''
+    #   set: attribute_in
+    - include: attribute_in
 
   constructor_arguments:
     - meta_content_scope: meta.instance.cs meta.group.cs
@@ -1519,7 +1526,7 @@ contexts:
       pop: true
 
   regex_arguments:
-    # Needs interpolated strings ($", $@", and @$")
+    # Needs interpolated strings ($", $@", and @$") and literals
     - match: '"'
       scope: punctuation.definition.string.begin.cs
       push:
@@ -1568,30 +1575,28 @@ contexts:
     - match: (ref)\s
       captures:
         1: storage.modifier.argument.cs
-    - match: '({{name}})\s*(=)(?=[^>=])'
-      captures:
-        1: variable.parameter.cs
-        2: keyword.operator.assignment.cs
-      push: line_of_code_in
     - match: '({{name}})\s*(:)'
       captures:
         1: variable.parameter.cs
         2: punctuation.separator.argument.value.cs
       push: line_of_code_in
-    - match: ','
-      scope: punctuation.separator.argument.cs
-    - match: (?=\))
-      pop: true
-    - match: ;
-      scope: invalid.illegal.expected-close-paren.cs
-      pop: true
-    - include: stray_close_bracket
+    - include: semi-colon-instead-of-close-paren
     - match: (?=\S)
       push:
         - include: lambdas
         - include: line_of_code_in_no_semicolon
         - match: (?=[;)])
           pop: true
+
+  semi-colon-instead-of-close-paren:
+    - match: ','
+      scope: punctuation.separator.argument.cs
+    - match: (?=\))
+      pop: true
+    - match: ;
+      scope: invalid.illegal.expected-close-paren.cs
+      pop: 2
+    - include: stray_close_bracket
 
   accessor_arguments:
     - meta_content_scope: meta.brackets.cs

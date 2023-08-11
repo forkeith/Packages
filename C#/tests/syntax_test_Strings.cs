@@ -79,3 +79,22 @@ replaced = Regex.Replace(some_value, "(?!^)([A-Z])", " $1");
 ///                                   ^^^^^^^^^^^^ meta.string source.regexp
 ///                                               ^ meta.string string.quoted.double punctuation.definition.string.end - source.regexp
 ///                                                ^ punctuation.separator.argument
+
+Regex rx = new Regex(@"\bincomplete-missing-paren\b"
+///        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.instance
+///        ^^^ keyword.operator.new
+///            ^^^^^ support.type
+///                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string
+///                  ^^ string.quoted.double.raw punctuation.definition.string.begin
+///                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.regexp
+///                                                ^ punctuation.definition.string.end - source.regexp
+///                    ^^ keyword.control.anchor
+
+expression_after_incomplete_statement = "12";
+/// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.instance meta.group
+/// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ variable.other
+///                                   ^ keyword.operator.assignment
+///                                     ^^^^ meta.string string.quoted.double
+///                                         ^ invalid.illegal.expected-close-paren
+///                                          ^ - meta.instance
+another_expression_after_incomplete_statement = "12";
