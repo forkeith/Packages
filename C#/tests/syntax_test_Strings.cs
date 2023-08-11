@@ -96,5 +96,4 @@ expression_after_incomplete_statement = "12";
 ///                                   ^ keyword.operator.assignment
 ///                                     ^^^^ meta.string string.quoted.double
 ///                                         ^ invalid.illegal.expected-close-paren
-///                                          ^ - meta.instance
-another_expression_after_incomplete_statement = "12";
+///                                          ^ - meta.instance - meta.group

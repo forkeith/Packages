@@ -1485,6 +1485,7 @@ contexts:
     - meta_content_scope: meta.annotation.cs meta.group.cs
     - match: \)
       scope: punctuation.section.group.end.cs
+    - include: keywords
     - match: '({{name}})\s*(=)(?=[^>=])'
       captures:
         1: variable.parameter.cs
