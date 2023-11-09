@@ -608,28 +608,38 @@ contexts:
     # List of SQL99 built-in functions from http://www.oreilly.com/catalog/sqlnut/chapter/ch04.html
     - match: \b(?i:AVG|COUNT|MIN|MAX|SUM)(?=\s*\()
       scope: support.function.aggregate.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   built-in-scalar-function-calls:
     # List of SQL99 built-in functions from http://www.oreilly.com/catalog/sqlnut/chapter/ch04.html
     - match: '{{builtin_scalar_functions}}'
       scope: support.function.scalar.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   built-in-user-function-calls:
     - match: '{{builtin_user_functions}}'
       scope: support.function.user.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   built-in-user-function-call:
     - match: '{{builtin_user_functions}}'
       scope: support.function.user.sql
-      set: function-call-arguments
+      set:
+        - maybe-operator
+        - function-call-arguments
 
   user-defined-function-calls:
     - match: \b{{simple_identifier}}(?=\s*\()
       scope: support.function.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   function-call-arguments:
     - meta_include_prototype: false
@@ -643,7 +653,7 @@ contexts:
     - meta_content_scope: meta.function-call.sql meta.group.sql
     - match: \)
       scope: meta.function-call.sql meta.group.sql punctuation.section.arguments.end.sql
-      set: maybe-operator
+      pop: 1
     - match: ','
       scope: punctuation.separator.arguments.sql
     - include: distinct

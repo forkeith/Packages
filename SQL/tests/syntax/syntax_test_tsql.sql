@@ -2108,11 +2108,12 @@ WHILE TRUE
 END
 -- <- keyword.control.flow.end
 
-    CURRENT_USER SESSION_USER SYSTEM_USER USER
+SELECT
+    CURRENT_USER, SESSION_USER, SYSTEM_USER, USER;
 --  ^^^^^^^^^^^^ support.function.user.sql
---               ^^^^^^^^^^^^ support.function.user.sql
---                            ^^^^^^^^^^^ support.function.user.sql
---                                        ^^^^ support.function.user.sql
+--                ^^^^^^^^^^^^ support.function.user.sql
+--                              ^^^^^^^^^^^ support.function.user.sql
+--                                           ^^^^ support.function.user.sql
 
 GRANT ALL
 -- ^^ keyword.other.authorization.sql
