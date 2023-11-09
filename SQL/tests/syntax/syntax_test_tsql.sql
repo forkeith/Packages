@@ -2555,3 +2555,12 @@ ALTER TABLE a.b WITH CHECK
 --                 ^^^^^^ meta.constraint-name.sql
     FOREIGN KEY (some_id) REFERENCES a.c (some_id);
 --  ^^^^^^^^^^^ meta.statement.alter.sql storage.modifier.sql
+
+CREATE TABLE a.b (
+    id          int
+        CONSTRAINT pk_b PRIMARY KEY,
+    external_id varchar(256) NOT NULL
+        CONSTRAINT uq_b_external_id UNIQUE,
+--                                  ^^^^^^ meta.statement.create.sql meta.table.sql meta.group.table-columns.sql storage.modifier.sql
+    name        varchar(512) NOT NULL
+);

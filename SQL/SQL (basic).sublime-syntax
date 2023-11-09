@@ -447,7 +447,7 @@ contexts:
       scope: keyword.other.dml.sql
     - match: \b(?i:(?:delete(?:\s+from)?))\b
       scope: keyword.other.dml.sql
-      set: dml-delete
+      push: dml-delete
     - match: \b(?i:update)\b
       scope: keyword.other.dml.sql
       push: dml-update
@@ -866,6 +866,8 @@ contexts:
         | on \s+ (?: delete | update ) (?: \s+ cascade )?
         | default
         )\b
+      scope: storage.modifier.sql
+    - match: \b(?i:unique)\b
       scope: storage.modifier.sql
       push: maybe-column-reference-list
     - match: \b(?i:references)\b
