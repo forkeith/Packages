@@ -893,8 +893,9 @@ contexts:
 
   inside-column-declaration-list:
     - meta_prepend: true
-    - match: \b(?i:rowguidcol|clustered|nonclustered)\b
+    - match: \b(?i:clustered|nonclustered)\b
       scope: storage.modifier.tsql
+    - include: with-table-options
     - match: \b(?i:period\s+for\s+system_time)\b
       scope: storage.modifier.tsql
 
@@ -981,6 +982,9 @@ contexts:
     - match: \b(?i:readonly)\b
       scope: storage.modifier.tsql
     - include: collate-expressions
+    - match: \b(?i:rowguidcol)\b
+      scope: storage.modifier.tsql
+    - include: strings
 
 ###[ IDENTIFIERS ]#############################################################
 

@@ -643,7 +643,7 @@ contexts:
     - meta_content_scope: meta.function-call.sql meta.group.sql
     - match: \)
       scope: meta.function-call.sql meta.group.sql punctuation.section.arguments.end.sql
-      pop: 1
+      set: maybe-operator
     - match: ','
       scope: punctuation.separator.arguments.sql
     - include: distinct
@@ -842,7 +842,8 @@ contexts:
       scope: storage.modifier.sql
       push: expect-constraint-name
     - include: column-modifiers
-    - include: expressions
+    - include: comma-separators
+    #- include: expressions
     - include: column-declaration
 
   column-declaration:
@@ -862,11 +863,18 @@ contexts:
       scope: keyword.other.sql
     - match: |-
         \b(?xi:
-          (?: (?: foreign | fulltext | primary | unique ) \s+ )? key
+          (?: (?: fulltext | primary | unique ) \s+ )? key
         | on \s+ (?: delete | update ) (?: \s+ cascade )?
         | default
         )\b
       scope: storage.modifier.sql
+    - match: |-
+        \b(?xi:
+          foreign\s+key
+        )\b
+      scope: storage.modifier.sql
+      push:
+        - column-reference-list
     - match: \b(?i:unique)\b
       scope: storage.modifier.sql
       push: maybe-column-reference-list
@@ -931,6 +939,8 @@ contexts:
       pop: 1
 
   after-type:
+    - match: \b(?i:NULL|NOT\s+NULL)\b
+      scope: storage.modifier.nullable.sql
     - include: else-pop
 
 ###[ IDENTIFIERS ]#############################################################
@@ -1348,6 +1358,14 @@ contexts:
     - match: \b(?i:and|or|having|exists|between|in|not|is)\b
       scope: keyword.operator.logical.sql
       pop: 1
+    - match: |-
+        (?!{{reserved}}|{{additional_reserved}}|(?ix:like|collate|as|asc|desc|into|option|range|rows
+          |over # TODO: only after RANK?
+          |at # TODO: only inside CAST?
+        )\b)(?={{simple_identifier}}(?!\s*\())
+      push:
+        - column-alias-name
+        - simple-identifier-part
     - include: else-pop
 
   operators:

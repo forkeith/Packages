@@ -450,6 +450,26 @@ WHERE   1 = 1
 GROUP BY foo
 -- ^^^^^ keyword.other.dml
 
+SELECT  foo foobar, COUNT(*) tally
+-- ^^^ keyword.other.dml
+--      ^^^ meta.column-name
+--          ^^^^^^ meta.column-alias
+--                ^ punctuation.separator.sequence
+--                  ^^^^^^^^ meta.function-call
+--                  ^^^^^ support.function.aggregate
+--                       ^^^ meta.group
+--                       ^ punctuation.section.arguments.begin
+--                        ^ constant.other.wildcard.asterisk
+--                         ^ punctuation.section.arguments.end
+--                           ^^^^^ meta.column-alias
+FROM    bar
+-- ^ keyword.other.dml
+--      ^^^ meta.table-name
+WHERE   1 = 1
+-- ^^ keyword.other.dml
+GROUP BY foo
+-- ^^^^^ keyword.other.dml
+
 select *
 from (select * from some_table) alias_table WITH (NOLOCK)
 -- ^ keyword.other.dml
@@ -1193,7 +1213,7 @@ CREATE TABLE dbo.T1
 --  ^^^^^^^^ meta.column-name
 --          ^ - meta.column-name
 --           ^^^^^^^^^^^ storage.type
---                       ^^^^ constant.language.null
+--                       ^^^^ storage.modifier.nullable.sql
 --                           ^ punctuation.separator.sequence
     column_5 as 'last computed' + column_2
 -- ^ - meta.column-name
@@ -1291,8 +1311,7 @@ GO
 CREATE TABLE [dbo].[be_Categories](
     [CategoryID] [uniqueidentifier] ROWGUIDCOL NOT NULL CONSTRAINT [DF_be_Categories_CategoryID] DEFAULT (newid()),
 --                                  ^^^^^^^^^^ storage.modifier
---                                             ^^^ keyword.operator.logical
---                                                 ^^^^ constant.language.null
+--                                             ^^^^^^^^ storage.modifier.nullable.sql
 --                                                      ^^^^^^^^^^ storage.modifier
 --                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.constraint-name
 --                                                                                               ^^^^^^^ storage.modifier
@@ -1393,15 +1412,13 @@ CREATE TABLE [Employee](
    [EmployeeID] [int] NOT NULL PRIMARY KEY,
 -- ^^^^^^^^^^^^ meta.column-name
 --              ^^^^^ storage.type
---                    ^^^ keyword.operator.logical
---                        ^^^^ constant.language.null
+--                    ^^^^^^^^ storage.modifier.nullable.sql
 --                             ^^^^^^^^^^^ storage.modifier
 --                                        ^ punctuation.separator.sequence
    [FirstName] VARCHAR(250) NOT NULL,
    [LastName] VARCHAR(250) NOT NULL,
    [DepartmentID] [int] NOT NULL REFERENCES [Department](DepartmentID),
---                      ^^^ keyword.operator.logical
---                          ^^^^ constant.language.null
+--                      ^^^^^^^^ storage.modifier.nullable.sql
 --                               ^^^^^^^^^^ storage.modifier
 --                                          ^^^^^^^^^^^^ meta.table-name
 --                                                      ^ punctuation.section.group.begin
@@ -1942,15 +1959,13 @@ CREATE TABLE Department
 --  ^^^^^^^^^^^^ meta.column-name variable.other.member.declaration
 --               ^^^^^^^^^ storage.type
 --                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ keyword.other
---                                                              ^^^ keyword.operator.logical
---                                                                  ^^^^ constant.language.null
+--                                                              ^^^^^^^^ storage.modifier.nullable.sql
 --                                                                      ^ punctuation.separator.sequence
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
 --  ^^^^^^^^^^ meta.column-name variable.other.member.declaration
 --             ^^^^^^^^^ storage.type
 --                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ keyword.other
---                                                          ^^^ keyword.operator.logical
---                                                              ^^^^ constant.language.null
+--                                                          ^^^^^^^^ storage.modifier.nullable.sql
 --                                                                  ^ punctuation.separator.sequence
     PERIOD FOR SYSTEM_TIME (SysStartTime, SysEndTime)
 --  ^^^^^^^^^^^^^^^^^^^^^^ storage.modifier
@@ -2554,7 +2569,10 @@ ALTER TABLE a.b WITH CHECK
 --      ^^^^^^^^^^ keyword.other.ddl.sql
 --                 ^^^^^^ meta.constraint-name.sql
     FOREIGN KEY (some_id) REFERENCES a.c (some_id);
---  ^^^^^^^^^^^ meta.statement.alter.sql storage.modifier.sql
+--  ^^^^^^^^^^^ storage.modifier.sql
+--              ^^^^^^^^^ meta.group.table-columns.sql
+--                        ^^^^^^^^^^ storage.modifier.sql
+--                                       ^^^^^^^^^ meta.group.table-columns.sql
 
 CREATE TABLE a.b (
     id          int
