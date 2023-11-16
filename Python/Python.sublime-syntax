@@ -61,7 +61,7 @@ variables:
   sql_indicator: |-
     (?x: \s* (?:
     # dml statements
-      SELECT | INSERT | REPLACE | DELETE | TRUNCATE | UPDATE | MERGE\s+INTO
+      SELECT | INSERT | REPLACE | DELETE | TRUNCATE | UPDATE | MERGE(?=\s+INTO|\s+\w+\.\w+\b)
     # ddl statements
     | ADD | ALTER | CREATE | DROP
     # conditional
@@ -2784,7 +2784,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: triple-double-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: triple-double-quoted-string-pop
         - include: triple-double-quoted-sql-raw-u-string-content
@@ -2870,7 +2870,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: triple-double-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: triple-double-quoted-string-pop
         - include: triple-double-quoted-u-string-content
@@ -3128,7 +3128,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: double-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: double-quoted-string-pop
         - include: double-quoted-sql-raw-u-string-content
@@ -3211,7 +3211,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: double-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: double-quoted-string-pop
         - include: double-quoted-u-string-content
@@ -3464,7 +3464,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: triple-single-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: triple-single-quoted-string-pop
         - include: triple-single-quoted-sql-raw-u-string-content
@@ -3550,7 +3550,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: triple-single-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: triple-single-quoted-string-pop
         - include: triple-single-quoted-u-string-content
@@ -3767,7 +3767,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: single-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: single-quoted-string-pop
         - include: single-quoted-sql-raw-u-string-content
@@ -3891,7 +3891,7 @@ contexts:
     - meta_content_scope: meta.string.python
     - include: single-quoted-string-end
     - match: ''
-      push: scope:source.sql
+      push: scope:source.sql.tsql.pyodbc
       with_prototype:
         - include: single-quoted-string-pop
         - include: single-quoted-u-string-content
