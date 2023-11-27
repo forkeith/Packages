@@ -1104,6 +1104,36 @@ contexts:
   literals-and-variables:
     - meta_prepend: true
     - include: variables
+    - match: (\{)(d|ts)[ ](')
+      captures:
+        1: punctuation.definition.annotation.begin.tsql
+        2: constant.language.tsql
+        3: punctuation.definition.string.begin.tsql
+      push: inside-datetime-literal-string
+
+  inside-datetime-literal-string:
+    - meta_scope: meta.braces.literal-datetime.tsql
+    - match: (\d{4})(-)(\d{2})(-)(\d{2})
+      captures:
+        1: meta.number.integer.decimal.tsql meta.date.year.tsql constant.numeric.value.tsql
+        2: meta.date.tsql punctuation.separator.sequence.tsql
+        3: meta.number.integer.decimal.tsql meta.date.month.tsql constant.numeric.value.tsql
+        4: meta.date.tsql punctuation.separator.sequence.tsql
+        5: meta.number.integer.decimal.tsql meta.date.day.tsql constant.numeric.value.tsql
+    - match: (\d{2})(:)(\d{2})(:)(\d{2})(?:(\.)(\d{1,3}))?
+      captures:
+        1: meta.number.integer.decimal.tsql meta.time.hour.tsql constant.numeric.value.tsql
+        2: meta.time.tsql punctuation.separator.sequence.tsql
+        3: meta.number.integer.decimal.tsql meta.time.minute.tsql constant.numeric.value.tsql
+        4: meta.time.tsql punctuation.separator.sequence.tsql
+        5: meta.number.integer.decimal.tsql meta.time.second.tsql constant.numeric.value.tsql
+        6: meta.number.float.decimal.tsql meta.time.millisecond.tsql punctuation.separator.decimal.tsql
+        7: meta.number.float.decimal.tsql meta.time.millisecond.tsql constant.numeric.value.tsql
+    - match: (')(\})
+      captures:
+        1: punctuation.definition.string.end.tsql
+        2: punctuation.definition.annotation.end.tsql
+      pop: 1
 
   onoff-constants:
     - match: \b(?i:on|off)\b

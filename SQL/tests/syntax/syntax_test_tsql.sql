@@ -2659,3 +2659,40 @@ WHEN NOT MATCHED AND @insert_if_missing = 1 THEN
     VALUES (@name, @now, @timeout);
 --  ^^^^^^ keyword.other.dml
 --         ^ meta.group.sql punctuation.section.group.begin.sql
+
+
+-- https://learn.microsoft.com/en-us/sql/odbc/reference/develop-app/date-time-and-timestamp-literals?view=sql-server-ver16
+select {d '2001-01-01'}
+--     ^^^^^^^^^^^^^^^^ meta.braces.literal-datetime.tsql
+--     ^ punctuation.definition.annotation.begin.tsql
+--      ^ constant.language.tsql
+--        ^ punctuation.definition.string.begin.tsql
+--         ^^^^^^^^^^ meta.date
+--         ^^^^ meta.number.integer.decimal.tsql meta.date.year.tsql constant.numeric.value.tsql
+--             ^ meta.date.tsql punctuation.separator.sequence.tsql
+--              ^^ meta.date.month.tsql constant.numeric.value.tsql
+--                ^ meta.date.tsql punctuation.separator.sequence.tsql
+--                 ^^ meta.date.day.tsql constant.numeric.value.tsql
+--                   ^ punctuation.definition.string.end.tsql
+--                    ^ punctuation.definition.annotation.end.tsql
+--                     ^ - meta.date - meta.braces
+select {ts '2001-01-01 01:01:01.531'}
+--     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.braces.literal-datetime.tsql
+--     ^ punctuation.definition.annotation.begin.tsql
+--      ^^ constant.language.tsql
+--         ^ punctuation.definition.string.begin.tsql
+--          ^^^^^^^^^^ meta.date
+--          ^^^^ meta.number.integer.decimal.tsql meta.date.year.tsql constant.numeric.value.tsql
+--              ^ meta.date.tsql punctuation.separator.sequence.tsql
+--               ^^ meta.date.month.tsql constant.numeric.value.tsql
+--                 ^ meta.date.tsql punctuation.separator.sequence.tsql
+--                  ^^ meta.date.day.tsql constant.numeric.value.tsql
+--                     ^^ meta.number.integer.decimal.tsql meta.time.hour.tsql constant.numeric.value.tsql
+--                       ^ meta.time.tsql punctuation.separator.sequence.tsql
+--                        ^^ meta.number.integer.decimal.tsql meta.time.minute.tsql constant.numeric.value.tsql
+--                          ^ meta.time.tsql punctuation.separator.sequence.tsql
+--                           ^^ meta.number.integer.decimal.tsql meta.time.second.tsql constant.numeric.value.tsql
+--                             ^ meta.number.float.decimal.tsql meta.time.millisecond.tsql punctuation.separator.decimal.tsql
+--                              ^^^ meta.number.float.decimal.tsql meta.time.millisecond.tsql constant.numeric.value.tsql
+--                                 ^ punctuation.definition.string.end.tsql
+--                                  ^ punctuation.definition.annotation.end.tsql
