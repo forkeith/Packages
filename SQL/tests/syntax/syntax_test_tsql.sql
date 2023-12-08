@@ -2669,9 +2669,9 @@ select {d '2001-01-01'}
 --        ^ punctuation.definition.string.begin.tsql
 --         ^^^^^^^^^^ meta.date
 --         ^^^^ meta.number.integer.decimal.tsql meta.date.year.tsql constant.numeric.value.tsql
---             ^ meta.date.tsql punctuation.separator.sequence.tsql
+--             ^ meta.date.tsql punctuation.separator.date.tsql
 --              ^^ meta.date.month.tsql constant.numeric.value.tsql
---                ^ meta.date.tsql punctuation.separator.sequence.tsql
+--                ^ meta.date.tsql punctuation.separator.date.tsql
 --                 ^^ meta.date.day.tsql constant.numeric.value.tsql
 --                   ^ punctuation.definition.string.end.tsql
 --                    ^ punctuation.definition.annotation.end.tsql
@@ -2683,14 +2683,14 @@ select {ts '2001-01-01 01:01:01.531'}
 --         ^ punctuation.definition.string.begin.tsql
 --          ^^^^^^^^^^ meta.date
 --          ^^^^ meta.number.integer.decimal.tsql meta.date.year.tsql constant.numeric.value.tsql
---              ^ meta.date.tsql punctuation.separator.sequence.tsql
+--              ^ meta.date.tsql punctuation.separator.date.tsql
 --               ^^ meta.date.month.tsql constant.numeric.value.tsql
---                 ^ meta.date.tsql punctuation.separator.sequence.tsql
+--                 ^ meta.date.tsql punctuation.separator.date.tsql
 --                  ^^ meta.date.day.tsql constant.numeric.value.tsql
 --                     ^^ meta.number.integer.decimal.tsql meta.time.hour.tsql constant.numeric.value.tsql
---                       ^ meta.time.tsql punctuation.separator.sequence.tsql
+--                       ^ meta.time.tsql punctuation.separator.time.tsql
 --                        ^^ meta.number.integer.decimal.tsql meta.time.minute.tsql constant.numeric.value.tsql
---                          ^ meta.time.tsql punctuation.separator.sequence.tsql
+--                          ^ meta.time.tsql punctuation.separator.time.tsql
 --                           ^^ meta.number.integer.decimal.tsql meta.time.second.tsql constant.numeric.value.tsql
 --                             ^ meta.number.float.decimal.tsql meta.time.millisecond.tsql punctuation.separator.decimal.tsql
 --                              ^^^ meta.number.float.decimal.tsql meta.time.millisecond.tsql constant.numeric.value.tsql
