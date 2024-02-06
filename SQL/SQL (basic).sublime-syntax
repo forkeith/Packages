@@ -482,6 +482,9 @@ contexts:
     - match: \b(?i:from)\b
       scope: keyword.other.dml.sql
       push: table-name-or-subquery
+    - include: order-keywords
+
+  order-keywords:
     - match: \b(?i:asc|desc)\b
       scope: keyword.other.order.sql
 
@@ -567,17 +570,21 @@ contexts:
 
   expressions-or-column-names:
     - include: wildcard-identifiers
+    - include: order-keywords
     - include: expressions
     - include: expect-column-names
+
+  expression-modifiers:
+    - include: collate-expressions
+    - include: constraint-expressions
 
   expressions:
     - include: groups
     - include: comma-separators
     - include: operators
     - include: column-alias-expressions
+    - include: expression-modifiers
     - include: case-expressions
-    - include: collate-expressions
-    - include: constraint-expressions
     - include: literals-and-variables
     - include: function-calls
     - include: illegal-stray-brackets
@@ -663,28 +670,38 @@ contexts:
     # List of SQL99 built-in functions from http://www.oreilly.com/catalog/sqlnut/chapter/ch04.html
     - match: \b(?i:AVG|COUNT|MIN|MAX|SUM)(?=\s*\()
       scope: support.function.aggregate.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   built-in-scalar-function-calls:
     # List of SQL99 built-in functions from http://www.oreilly.com/catalog/sqlnut/chapter/ch04.html
     - match: \b{{builtin_scalar_functions}}\b
       scope: support.function.scalar.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   built-in-user-function-calls:
     - match: \b{{builtin_user_functions}}\b
       scope: support.function.user.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   built-in-user-function-call:
     - match: \b{{builtin_user_functions}}\b
       scope: support.function.user.sql
-      set: function-call-arguments
+      set:
+        - maybe-operator
+        - function-call-arguments
 
   user-defined-function-calls:
     - match: \b{{simple_identifier}}(?=\s*\()
       scope: support.function.sql
-      push: function-call-arguments
+      push:
+        - maybe-operator
+        - function-call-arguments
 
   function-call-arguments:
     - meta_include_prototype: false
@@ -754,12 +771,15 @@ contexts:
       scope: punctuation.section.group.end.sql
       pop: 1
     - include: column-modifiers
-    - include: expressions
+    - include: comma-separators
+    - include: expression-modifiers
+    #- include: expressions
     - include: expect-column-declarations
 
   expect-column-declarations:
     - match: (?=\S)
       push:
+        - after-type
         - maybe-column-modifier
         - after-type
         - expect-type
@@ -771,6 +791,7 @@ contexts:
     - include: else-pop
 
   column-modifiers:
+    - include: expression-modifiers
     - match: \b(?i:check)\b
       scope: keyword.other.sql
     - match: |-
@@ -1034,7 +1055,15 @@ contexts:
     - match: \b{{type_modifiers}}\b
       scope: storage.modifier.sql
       pop: 1
+    - match: \b(?i:(NULL)|(NOT)\s+(NULL))\b
+      captures:
+        0: storage.modifier.nullable.sql
+        1: constant.language.null.sql
+        2: keyword.operator.logical.basic
+        3: constant.language.null.sql
+    - include: expression-modifiers
     - include: assignment-operators
+    - include: strings
     - include: else-pop
 
 ###[ IDENTIFIERS ]#############################################################
@@ -1459,6 +1488,14 @@ contexts:
     - match: \b(?i:and|or|having|exists|between|in|not|is)\b
       scope: keyword.operator.logical.sql
       pop: 1
+    - match: |-
+        (?!{{toplevel_reserved}}|{{additional_toplevel_reserved}}|(?ix:like|collate|as|asc|desc|into|option|range|rows
+          |over # TODO: only after RANK?
+          |at # TODO: only inside CAST?
+        )\b)(?={{simple_identifier}}(?!\s*\())
+      push:
+        - column-alias-name
+        - simple-identifier-part
     - include: else-pop
 
   operators:

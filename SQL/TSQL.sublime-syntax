@@ -502,10 +502,13 @@ contexts:
         - inside-column-declaration-list
     - include: else-pop
 
-  inside-column-declaration-list:
+  column-modifiers:
     - meta_prepend: true
     - match: \b(?i:rowguidcol|clustered|nonclustered)\b
       scope: storage.modifier.tsql
+      push:
+        - maybe-with-table-options
+        - maybe-column-name-list
     - match: \b(?i:period\s+for\s+system_time)\b
       scope: storage.modifier.tsql
 

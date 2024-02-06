@@ -366,7 +366,10 @@ RAISERROR (@Message, 0, 1) WITH NOWAIT
 SELECT COALESCE(a.field1, b.field2, c.field1) AS Blah, ISNULL(d.field1, 'default') as field1
 --     ^^^^^^^^ meta.function-call support.function
 --                                            ^^ keyword.operator.assignment.alias
+--                                               ^^^^ meta.alias.column
 --                                                     ^^^^^^ meta.function-call support.function
+--                                                                                 ^^ keyword.operator.assignment.alias
+--                                                                                    ^^^^^^ meta.alias.column
 -------------------------------
 EXEC @ReturnCode = msdb.dbo.sp_add_jobschedule @job_id=@jobId, @name=N'every 10 seconds',
         @enabled=1,
@@ -1771,22 +1774,63 @@ DECLARE @Data NVARCHAR(MAX)
 --                        ^ punctuation.section.group.end
 SELECT @Data = (
     SELECT [CustomerID] as "@CustomerID",
-       [CustomerName],
+--                      ^^ meta.group.sql keyword.operator.assignment.alias.sql
+--                         ^^^^^^^^^^^^^ meta.group.sql meta.alias.column.sql
+--                         ^ punctuation.definition.identifier.begin.sql
+--                                     ^ punctuation.definition.identifier.end.sql
+--                                      ^ meta.group.sql punctuation.separator.sequence.sql
+       [CustomerName] AS [Full Name],
+--     ^^^^^^^^^^^^^^ meta.group.sql meta.column-name.sql
+--                    ^^ meta.group.sql keyword.operator.assignment.alias.sql
+--                       ^^^^^^^^^^^ meta.group.sql meta.alias.column.sql
+--                       ^ punctuation.definition.identifier.begin.sql
+--                                 ^ punctuation.definition.identifier.end.sql
+--                                  ^ meta.group.sql punctuation.separator.sequence.sql
        [CustomerCategoryName],
        [PrimaryContact],
        [AlternateContact],
        [PhoneNumber],
        [FaxNumber],
        [BuyingGroupName] AS '*',
-       [WebsiteURL] WebsiteLink, -- TODO: scope alias correctly when no explicit 'AS'
-       [DeliveryMethod] 'MethodOfDelivery' -- TODO: scope alias correctly when no explicit 'AS'
+--     ^^^^^^^^^^^^^^^^^ meta.group.sql meta.column-name.sql
+--                       ^^ meta.group.sql keyword.operator.assignment.alias.sql
+--                          ^^^ meta.group.sql meta.alias.column.sql
+--                          ^ punctuation.definition.identifier.begin.sql
+--                           ^ - punctuation - keyword
+--                            ^ punctuation.definition.identifier.end.sql
+--                             ^ meta.group.sql punctuation.separator.sequence.sql
+       [WebsiteURL] WebsiteLink,
+--     ^^^^^^^^^^^^ meta.group.sql meta.column-name.sql
+--                  ^^^^^^^^^^^ meta.group.sql meta.alias.column.sql
+--                             ^ meta.group.sql punctuation.separator.sequence.sql
+       [Comments] [Our Comments], -- TODO: should be a column alias
+--     ^^^^^^^^^^ meta.group.sql meta.column-name.sql
+--                ^^^^^^^^^^^^^^ meta.group.sql meta.column-name.sql
+--                ^ punctuation.definition.identifier.begin.sql
+--                             ^ punctuation.definition.identifier.end.sql
+--                              ^ meta.group.sql punctuation.separator.sequence.sql
+       [EmailAddress] "Email", -- TODO: should be a column alias
+--     ^^^^^^^^^^^^^^ meta.group.sql meta.column-name.sql
+--                    ^^^^^^^ meta.group.sql meta.column-name.sql
+--                    ^ punctuation.definition.identifier.begin.sql
+--                          ^ punctuation.definition.identifier.end.sql
+--                           ^ meta.group.sql punctuation.separator.sequence.sql
+       [DeliveryMethod] 'MethodOfDelivery' -- TODO: should be a column alias
+--     ^^^^^^^^^^^^^^^^ meta.group.sql meta.column-name.sql
+--                      ^^^^^^^^^^^^^^^^^^ meta.group.sql meta.string.sql string.quoted.single.sql
+--                      ^ punctuation.definition.string.begin.sql
+--                                       ^ punctuation.definition.string.end.sql
     FROM [WideWorldImporters].[Website].[Customers]
     WHERE CustomerID < 3 FOR XML PATH('Customer'), ROOT('Customers')
 --                       ^^^^^^^ keyword.other
 --                               ^^^^ keyword.other
 --                                   ^ punctuation.section.group.begin
+--                                    ^^^^^^^^^^ meta.group.sql meta.group.sql meta.string.sql string.quoted.single.sql
 --                                               ^ punctuation.separator.sequence
 --                                                 ^^^^ keyword.other
+--                                                     ^ meta.group.sql meta.group.sql punctuation.section.group.begin.sql
+--                                                      ^^^^^^^^^^^ meta.group.sql meta.group.sql meta.string.sql string.quoted.single.sql
+--                                                                 ^ meta.group.sql meta.group.sql punctuation.section.group.end.sql
 )
 -- <- meta.group punctuation.section.group.end
 
@@ -2093,11 +2137,11 @@ WHILE TRUE
 END
 -- <- keyword.control.flow.end
 
-    CURRENT_USER SESSION_USER SYSTEM_USER USER
---  ^^^^^^^^^^^^ support.function.user.sql
---               ^^^^^^^^^^^^ support.function.user.sql
---                            ^^^^^^^^^^^ support.function.user.sql
---                                        ^^^^ support.function.user.sql
+SELECT CURRENT_USER, SESSION_USER, SYSTEM_USER, USER
+--     ^^^^^^^^^^^^ support.function.user.sql
+--                   ^^^^^^^^^^^^ support.function.user.sql
+--                                 ^^^^^^^^^^^ support.function.user.sql
+--                                              ^^^^ support.function.user.sql
 
 GRANT ALL
 -- ^^ keyword.other.authorization.sql
