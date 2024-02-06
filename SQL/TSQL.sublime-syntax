@@ -1189,12 +1189,24 @@ contexts:
 
 ###[ OPERATORS ]###############################################################
 
+  maybe-operator:
+    - meta_prepend: true
+    - match: (=)(=)
+      captures:
+        1: keyword.operator.comparison.tsql
+        2: invalid.illegal.unknown-operator.tsql
+      pop: 1
+
   operators:
-    - meta_append: true
+    - meta_prepend: true
     - match: '%'
       scope: keyword.operator.arithmetic.tsql
     - match: '::'
       scope: punctuation.accessor.double-colon.tsql
+    - match: (=)(=)
+      captures:
+        1: keyword.operator.comparison.tsql
+        2: invalid.illegal.unknown-operator.tsql
 
   augmented-assignment-operators:
     - match: '[-+/*%^|]='
