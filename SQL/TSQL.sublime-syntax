@@ -868,7 +868,7 @@ contexts:
     - meta_prepend: true
     - include: table-timespecs
     - include: with-table-options
-    - match: (?=\b(?i:unpivot|pivot)\b)
+    - match: (?=\b(?i:unpivot|pivot|using)\b)
       pop: 1
 
   table-alias-name:

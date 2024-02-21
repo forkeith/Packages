@@ -2520,6 +2520,28 @@ when not matched then
     insert (a,b,c) values (source.a, source.b, default);
 --                                             ^^^^^^^ meta.group.sql variable.language.tsql
 
+MERGE INTO some_schema.some_table WITH (holdlock)
+-- ^^^^^^^ keyword.other.tsql
+--         ^^^^^^^^^^^^^^^^^^^^^^ meta.table-name.sql
+--                                ^^^^ keyword.other.dml.sql
+--                                     ^ meta.group.sql punctuation.section.group.begin.sql
+--                                      ^^^^^^^^ meta.group.sql constant.language.with.tsql
+--                                              ^ meta.group.sql punctuation.section.group.end.sql
+USING some_schema.another_table AS source
+-- ^^ keyword.context.resource.tsql
+--    ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.table-name.sql
+--                              ^^ keyword.operator.assignment.alias.sql
+--                                 ^^^^^^ meta.alias.table.sql
+ON source.some_id = target.some_id
+-- <- keyword.control.conditional.sql
+when matched then
+    update set target.b = source.b
+when not matched then
+    insert (a,b,c) values (source.a, source.b, default);
+--                                             ^^^^^^^ meta.group.sql variable.language.tsql
+
+
+
 DECLARE @deadlock_var NCHAR(3);
 SET @deadlock_var = N'LOW';
   
