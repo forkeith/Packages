@@ -5800,6 +5800,20 @@ func lang_embedding() {
     not_sql_string = `select not sql`
     //               ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go - source.sql
 
+    // language=sql
+    return SomeFunctionCall(ExecContext(ctx, `
+        UPDATE a.b
+        SET c = @c
+        WHERE d = @d
+        `,
+        sql.Named("c", c),
+        sql.Named("d", d),
+    ))
+    // <- punctuation.section.parens.end.go - invalid
+
+    not_sql_string = `select not sql`
+    //               ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go - source.sql
+
     response := &http.Response{
         StatusCode: http.StatusUnauthorized,
         //language=json
@@ -5810,7 +5824,7 @@ func lang_embedding() {
                 "foo": ["{{b}}ar\n", 123, {{baz}}]
                 //^^^^^ meta.string.go meta.embedded.go source.json.embedded.go
                 //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.go meta.embedded.go source.json.embedded.go meta.mapping.value meta.sequence
-                //       ^^^^^ meta.interpolation.go - string.quoted
+                //       ^^^^^ meta.interpolation.go - string.quoted.backtick
                 //              ^^ constant.character.escape.json
                 //                        ^^^^^^^ meta.interpolation.go
             }
