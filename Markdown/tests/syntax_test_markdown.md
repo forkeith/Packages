@@ -1911,6 +1911,18 @@ for (var i = 0; i < 10; i++) {
 |^^ meta.code-fence.definition.end.jsx.markdown-gfm punctuation.definition.raw.code-fence.end.markdown
 |  ^ meta.code-fence.definition.end.jsx.markdown-gfm meta.fold.code-fence.end - punctuation
 
+```latex
+| <- meta.code-fence.definition.begin.latex.markdown-gfm punctuation.definition.raw.code-fence.begin.markdown
+|^^ meta.code-fence.definition.begin.latex.markdown-gfm punctuation.definition.raw.code-fence.begin.markdown
+|  ^^^^^ meta.code-fence.definition.begin.latex.markdown-gfm constant.other.language-name.markdown
+|       ^ meta.code-fence.definition.begin.latex.markdown-gfm meta.fold.code-fence.begin.markdown - punctuation
+
+| <- markup.raw.code-fence.latex.markdown-gfm text.tex.latex
+```
+| <- meta.code-fence.definition.end.latex.markdown-gfm punctuation.definition.raw.code-fence.end.markdown
+|^^ meta.code-fence.definition.end.latex.markdown-gfm punctuation.definition.raw.code-fence.end.markdown
+|  ^ meta.code-fence.definition.end.latex.markdown-gfm meta.fold.code-fence.end.markdown - punctuation
+
 ```lisp
 |^^^^^^ meta.code-fence.definition.begin - meta.fold
 |      ^ meta.code-fence.definition.begin meta.fold.code-fence.begin
@@ -8191,6 +8203,275 @@ This is a [[wiki link]].
 |         ^^^^^^^^^^^^^ meta.link.reference.wiki.description.markdown
 |         ^^ punctuation.definition.link.begin.markdown
 |                    ^^ punctuation.definition.link.end.markdown
+
+
+# TEST: GITHUB ALERTS #########################################################
+
+> [!CAUTION]
+| <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^^^^^ markup.quote.alert.caution.markdown
+| ^^^^^^^^^^ markup.heading.alert.caution.markdown
+| ^ punctuation.definition.heading.begin.markdown
+|          ^ punctuation.definition.heading.end.markdown
+
+> [!CAUTION]
+> 
+> Text
+| <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.caution.markdown - markup.paragraph
+| ^^^^^ markup.quote.alert.caution.markdown markup.paragraph.markdown
+
+> [!CAUTION]
+> 
+> Paragraph 1
+> 
+> Paragraph 2
+| <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.caution.markdown - markup.paragraph
+| ^^^^^^^^^^^ markup.quote.alert.caution.markdown markup.paragraph.markdown
+
+> [!CAUTION]
+> 
+> - list item
+> 
+> - list item
+| <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.caution.markdown
+| ^ markup.quote.alert.caution.markdown markup.list.unnumbered.bullet.markdown punctuation.definition.list_item.markdown
+|  ^^^^^^^^^^^ markup.quote.alert.caution.markdown markup.list.unnumbered.markdown
+
+> [!CAUTION]
+> 
+> 1. list item
+> 
+> 2. list item
+| <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.caution.markdown
+| ^^ markup.quote.alert.caution.markdown markup.list.numbered.bullet.markdown
+|  ^ punctuation.definition.list_item.markdown
+|   ^^^^^^^^^^ markup.quote.alert.caution.markdown markup.list.numbered.markdown
+
+> [!CAUTION]
+> 
+> 1. list item
+> 
+> 2. list item paragraph 1
+> 
+>    list item paragraph 2
+| <- markup.quote.alert.caution.markdown markup.list.numbered.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.quote.alert.caution.markdown markup.list.numbered.markdown
+
+> [!CAUTION]
+> 
+> Paragraph 1
+> 
+> # Heading
+>
+> Paragraph 2
+| <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^^^^^^ markup.quote.alert.caution.markdown
+
+> [!CAUTION]
+> 
+> ```
+> fenced code
+> ```
+>
+> Paragraph 2
+| <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^^^^^^ markup.quote.alert.caution.markdown
+
+> [!WARNING]
+| <- markup.quote.alert.warning.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^^^^^ markup.quote.alert.warning.markdown
+| ^^^^^^^^^^ markup.heading.alert.warning.markdown
+| ^ punctuation.definition.heading.begin.markdown
+|          ^ punctuation.definition.heading.end.markdown
+
+> [!WARNING]
+> 
+> Text
+| <- markup.quote.alert.warning.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.warning.markdown - markup.paragraph
+| ^^^^^ markup.quote.alert.warning.markdown markup.paragraph.markdown
+
+> [!IMPORTANT]
+| <- markup.quote.alert.important.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^^^^^^^ markup.quote.alert.important.markdown
+| ^^^^^^^^^^^^ markup.heading.alert.important.markdown
+| ^ punctuation.definition.heading.begin.markdown
+|            ^ punctuation.definition.heading.end.markdown
+
+> [!IMPORTANT]
+> 
+> Text
+| <- markup.quote.alert.important.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.important.markdown - markup.paragraph
+| ^^^^^ markup.quote.alert.important.markdown markup.paragraph.markdown
+
+> [!NOTE]
+| <- markup.quote.alert.note.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^^ markup.quote.alert.note.markdown
+| ^^^^^^^ markup.heading.alert.note.markdown
+| ^ punctuation.definition.heading.begin.markdown
+|       ^ punctuation.definition.heading.end.markdown
+
+> [!NOTE]
+> 
+> Text
+| <- markup.quote.alert.note.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.note.markdown - markup.paragraph
+| ^^^^^ markup.quote.alert.note.markdown markup.paragraph.markdown
+
+> [!TIP]
+| <- markup.quote.alert.tip.markdown punctuation.definition.blockquote.markdown
+|^^^^^^^^ markup.quote.alert.tip.markdown
+| ^^^^^^ markup.heading.alert.tip.markdown
+| ^ punctuation.definition.heading.begin.markdown
+|      ^ punctuation.definition.heading.end.markdown
+
+> [!TIP]
+> 
+> Text
+| <- markup.quote.alert.tip.markdown punctuation.definition.blockquote.markdown
+|^ markup.quote.alert.tip.markdown - markup.paragraph
+| ^^^^^ markup.quote.alert.tip.markdown markup.paragraph.markdown
+
+   
+1. list item   
+   > [!CAUTION]
+   | <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^^^^^ markup.quote.alert.caution.markdown
+   | ^^^^^^^^^^ markup.heading.alert.caution.markdown
+   | ^ punctuation.definition.heading.begin.markdown
+   |          ^ punctuation.definition.heading.end.markdown
+
+   > [!CAUTION]
+   > 
+   > Text
+   | <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.caution.markdown - markup.paragraph
+   | ^^^^^ markup.quote.alert.caution.markdown markup.paragraph.markdown
+
+   > [!CAUTION]
+   > 
+   > Paragraph 1
+   > 
+   > Paragraph 2
+   | <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.caution.markdown - markup.paragraph
+   | ^^^^^^^^^^^ markup.quote.alert.caution.markdown markup.paragraph.markdown
+   
+   > [!CAUTION]
+   > 
+   > - list item
+   > 
+   > - list item
+   | <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.caution.markdown
+   | ^ markup.quote.alert.caution.markdown markup.list.unnumbered.bullet.markdown punctuation.definition.list_item.markdown
+   |  ^^^^^^^^^^^ markup.quote.alert.caution.markdown markup.list.unnumbered.markdown
+   
+   > [!CAUTION]
+   > 
+   > 1. list item
+   > 
+   > 2. list item
+   | <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.caution.markdown
+   | ^^ markup.quote.alert.caution.markdown markup.list.numbered.bullet.markdown
+   |  ^ punctuation.definition.list_item.markdown
+   |   ^^^^^^^^^^ markup.quote.alert.caution.markdown markup.list.numbered.markdown
+   
+   > [!CAUTION]
+   > 
+   > 1. list item
+   > 
+   > 2. list item paragraph 1
+   > 
+   >    list item paragraph 2
+   | <- markup.quote.alert.caution.markdown markup.list.numbered.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.quote.alert.caution.markdown markup.list.numbered.markdown
+   
+   > [!CAUTION]
+   > 
+   > Paragraph 1
+   > 
+   > # Heading
+   >
+   > Paragraph 2
+   | <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^^^^^^ markup.quote.alert.caution.markdown
+
+   > [!CAUTION]
+   > 
+   > ```
+   > fenced code
+   > ```
+   >
+   > Paragraph 2
+   | <- markup.quote.alert.caution.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^^^^^^ markup.quote.alert.caution.markdown
+
+1. list item   
+   > [!WARNING]
+   | <- markup.quote.alert.warning.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^^^^^ markup.quote.alert.warning.markdown
+   | ^^^^^^^^^^ markup.heading.alert.warning.markdown
+   | ^ punctuation.definition.heading.begin.markdown
+   |          ^ punctuation.definition.heading.end.markdown
+
+   > [!WARNING]
+   > 
+   > Text
+   | <- markup.quote.alert.warning.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.warning.markdown - markup.paragraph
+   | ^^^^^ markup.quote.alert.warning.markdown markup.paragraph.markdown
+
+1. list item   
+   > [!IMPORTANT]
+   | <- markup.quote.alert.important.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^^^^^^^ markup.quote.alert.important.markdown
+   | ^^^^^^^^^^^^ markup.heading.alert.important.markdown
+   | ^ punctuation.definition.heading.begin.markdown
+   |            ^ punctuation.definition.heading.end.markdown
+
+   > [!IMPORTANT]
+   > 
+   > Text
+   | <- markup.quote.alert.important.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.important.markdown - markup.paragraph
+   | ^^^^^ markup.quote.alert.important.markdown markup.paragraph.markdown
+
+1. list item   
+   > [!NOTE]
+   | <- markup.quote.alert.note.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^^ markup.quote.alert.note.markdown
+   | ^^^^^^^ markup.heading.alert.note.markdown
+   | ^ punctuation.definition.heading.begin.markdown
+   |       ^ punctuation.definition.heading.end.markdown
+
+   > [!NOTE]
+   > 
+   > Text
+   | <- markup.quote.alert.note.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.note.markdown - markup.paragraph
+   | ^^^^^ markup.quote.alert.note.markdown markup.paragraph.markdown
+   
+1. list item   
+   > [!TIP]
+   | <- markup.quote.alert.tip.markdown punctuation.definition.blockquote.markdown
+   |^^^^^^^^ markup.quote.alert.tip.markdown
+   | ^^^^^^ markup.heading.alert.tip.markdown
+   | ^ punctuation.definition.heading.begin.markdown
+   |      ^ punctuation.definition.heading.end.markdown
+
+   > [!TIP]
+   > 
+   > Text
+   | <- markup.quote.alert.tip.markdown punctuation.definition.blockquote.markdown
+   |^ markup.quote.alert.tip.markdown - markup.paragraph
+   | ^^^^^ markup.quote.alert.tip.markdown markup.paragraph.markdown
 
 
 # TEST: MATHJAX BLOCKS MARKUP #################################################
