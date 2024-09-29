@@ -36,3 +36,8 @@ contexts:
       pop: true
     - match: \\.
       scope: constant.character.escape.sql
+
+  variables:
+    - meta_prepend: true
+    - match: '%s'
+      scope: invalid.deprecated.sql-injection.php
