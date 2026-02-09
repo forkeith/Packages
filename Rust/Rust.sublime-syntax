@@ -393,7 +393,7 @@ contexts:
       pop: true
 
   attribute-call:
-    - meta_content_scope: meta.group.rust
+    - meta_content_scope: meta.function-call.rust meta.group.rust
     - match: \)
       scope: meta.function-call.rust meta.group.rust punctuation.section.group.end.rust
       pop: true

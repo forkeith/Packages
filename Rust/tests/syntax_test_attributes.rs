@@ -6,13 +6,13 @@
 // ^^^ variable.annotation
 //     ^ keyword.operator.assignment
 //       ^^^^^^^^^^^^ support.macro
-//                   ^^^^^^^^^^^^^^^^^ meta.group
+//                   ^^^^^^^^^^^^^^^^^ meta.function-call meta.group
 //                   ^ punctuation.section.group.begin
 //                    ^^^^^^^^^^^^^^^ string.quoted.double
 //                    ^ punctuation.definition.string.begin
 //                                  ^ punctuation.definition.string.end
 //                                   ^ punctuation.section.group.end
-//                                    ^ punctuation.section.group.end
+//                                    ^ punctuation.section.group.end - meta.function-call
 //                                     ^ - meta.annotation
 
 #![warn(unused)]
